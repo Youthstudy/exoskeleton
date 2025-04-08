@@ -1,0 +1,15 @@
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/timers.c
+exoskeleton\timers.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+exoskeleton\timers.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
+exoskeleton\timers.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+exoskeleton\timers.o: ../Core/Inc/FreeRTOSConfig.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+exoskeleton\timers.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h

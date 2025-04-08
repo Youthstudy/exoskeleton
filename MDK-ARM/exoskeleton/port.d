@@ -1,0 +1,12 @@
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+exoskeleton\port.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
+exoskeleton\port.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+exoskeleton\port.o: ../Core/Inc/FreeRTOSConfig.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+exoskeleton\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
