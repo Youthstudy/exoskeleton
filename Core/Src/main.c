@@ -26,9 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "calculate.h"
-#include "cansend.h"
-#include "control.h"
+
+
 //#include "usbd_cdc_if.c"
 
 /* USER CODE END Includes */
@@ -63,7 +62,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void pc_debug(void);
 /* USER CODE END 0 */
 
 /**
@@ -83,7 +82,10 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  int key_count = 0;
+//  int key_count = 0;
+
+
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -106,40 +108,52 @@ int main(void)
   EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
 
-  HAL_UART_Receive_IT(&huart3, ImuData[0].RecieveBuffer, BUFFER_LEN);//IMU设置打开四元数，线性加速度
-  HAL_UART_Receive_IT(&huart6, ImuData[1].RecieveBuffer, BUFFER_LEN);
-  HAL_UART_Receive_IT(&huart7, ImuData[2].RecieveBuffer, BUFFER_LEN);
-  HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
+
+  // 临时电机参数设置
+  HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
+	
+
+
+//	IMU设置打开四元数，线性加速度
+//  HAL_UART_Receive_IT(&huart3, ImuData[0].RecieveBuffer, BUFFER_LEN);
+//  HAL_UART_Receive_IT(&huart6, ImuData[1].RecieveBuffer, BUFFER_LEN);
+//  HAL_UART_Receive_IT(&huart7, ImuData[2].RecieveBuffer, BUFFER_LEN);
+//  HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
 
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
+//  /* Call init function for freertos objects (in freertos.c) */
+//  MX_FREERTOS_Init();
 
-  /* Start scheduler */
-  osKernelStart();
+//  /* Start scheduler */
+//  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-      key_count = KEY_Read();
-      if (key_count == 1)
-        {
-          LED_mode(key_count);
-          CAN1_Send_Msg(&TxHeader[0], 1);
-          joint_set(&joint[0], 0, 0, 3, 5, 1);
-          pack_cmd(&TxHeader[0], joint[0]);
-        }
-      else
-        {
-					LED_mode(key_count);
+      /* USER CODE END WHILE */
 
-        }
+      /* USER CODE BEGIN 3 */
+			pc_debug();
+//      key_count = KEY_Read();
+//      if (key_count == 1)
+//        {
+//          LED_mode(key_count);
+
+
+//      CAN1_Send_Msg(&TxHeader[0], 1);
+//      joint_set(&joint[0], 0, 0, 0, 5, 1);
+//      pack_cmd(&TxHeader[0], joint[0]);
+			
+//        }
+//      else
+//        {
+//					LED_mode(key_count);
+
+//        }
       HAL_Delay(10);
     }
   /* USER CODE END 3 */
@@ -171,26 +185,32 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    {
+      Error_Handler();
+    }
 
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+                                |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-  {
-    Error_Handler();
-  }
+    {
+      Error_Handler();
+    }
 }
 
 /* USER CODE BEGIN 4 */
+
+void pc_debug(void){
+	CAN1_Send_Msg(&TxHeader[0], 1);
+	joint_pc_set(&joint[0],&motor_parameter);
+	pack_cmd(&TxHeader[0], joint[0]);
+}
 
 /* USER CODE END 4 */
 
@@ -207,9 +227,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
+  if (htim->Instance == TIM6)
+    {
+      HAL_IncTick();
+    }
   /* USER CODE BEGIN Callback 1 */
 
   /* USER CODE END Callback 1 */

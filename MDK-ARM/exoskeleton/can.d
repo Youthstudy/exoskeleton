@@ -33,11 +33,11 @@ exoskeleton\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 exoskeleton\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+exoskeleton\can.o: ./bsp/calculate.h
+exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 exoskeleton\can.o: ../Core/Inc/cansend.h
 exoskeleton\can.o: ../Core/Inc/can.h
 exoskeleton\can.o: ./bsp/control.h
 exoskeleton\can.o: ./bsp/pid.h
-exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
-exoskeleton\can.o: ./bsp/calculate.h
 exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

@@ -31,7 +31,10 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "calculate.h"
+#include "cansend.h"
+#include "control.h"
+	
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

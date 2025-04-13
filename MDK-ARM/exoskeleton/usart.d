@@ -37,6 +37,7 @@ exoskeleton\usart.o: ./bsp/calculate.h
 exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 exoskeleton\usart.o: ../Core/Inc/cansend.h
 exoskeleton\usart.o: ../Core/Inc/can.h
+exoskeleton\usart.o: ../Core/Inc/main.h
 exoskeleton\usart.o: ../Core/Inc/cansend.h
 exoskeleton\usart.o: ./bsp/calculate.h
 exoskeleton\usart.o: ./bsp/control.h

@@ -32,6 +32,7 @@
 "exoskeleton\calculate.o"
 "exoskeleton\control.o"
 "exoskeleton\my_task.o"
+"exoskeleton\admittance_control.o"
 "exoskeleton\croutine.o"
 "exoskeleton\event_groups.o"
 "exoskeleton\list.o"

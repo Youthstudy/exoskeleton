@@ -1,4 +1,5 @@
 #include "cansend.h"
+#include "control.h"
 
 CAN_TxPacketTypeDef TxHeader[MOTOR];
 
@@ -134,10 +135,8 @@ void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id)
   TxMessage->hdr.DLC = 8;		
 	uint8_t qidong[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFC};
 	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, qidong, &TxMessage->mailbox) ;
-	
-
-
-//	
-//	
 
 }
+
+
+

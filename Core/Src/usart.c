@@ -347,14 +347,20 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	if(huart->Instance == USART3){
+		
 		Receive(&ImuData[0]);
 		HAL_UART_Receive_IT(&huart3, ImuData[0].RecieveBuffer, BUFFER_LEN);
 		
 	}else if(huart->Instance == USART6){
-		
-		Receive(&ImuData[1]);
-		HAL_UART_Receive_IT(&huart6, ImuData[1].RecieveBuffer, BUFFER_LEN);
-		
+		if(PC_DEBUG_ENABLE){
+			
+			Receive_pc_debug(&joint[0],&motor_parameter);
+			
+			HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
+		}else{
+			Receive(&ImuData[1]);
+			HAL_UART_Receive_IT(&huart6, ImuData[1].RecieveBuffer, BUFFER_LEN);
+		}
 	}else if(huart->Instance == UART7){
 		
 		Receive(&ImuData[2]);
