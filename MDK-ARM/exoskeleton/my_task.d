@@ -1,6 +1,4 @@
 exoskeleton\my_task.o: bsp\my_task.c
-exoskeleton\my_task.o: bsp\my_task.h
-exoskeleton\my_task.o: ../Core/Inc/stm32f4xx_it.h
 exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 exoskeleton\my_task.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
 exoskeleton\my_task.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -12,6 +10,8 @@ exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/
 exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+exoskeleton\my_task.o: bsp\my_task.h
+exoskeleton\my_task.o: ../Core/Inc/usart.h
 exoskeleton\my_task.o: ../Core/Inc/main.h
 exoskeleton\my_task.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 exoskeleton\my_task.o: ../Core/Inc/stm32f4xx_hal_conf.h
@@ -54,8 +54,3 @@ exoskeleton\my_task.o: ./bsp/control.h
 exoskeleton\my_task.o: ./bsp/pid.h
 exoskeleton\my_task.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\my_task.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
-exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
-exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
-exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
-exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
-exoskeleton\my_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h

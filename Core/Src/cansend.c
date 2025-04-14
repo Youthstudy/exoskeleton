@@ -43,33 +43,29 @@ float fminf(float x, float y){
 void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint){
      
      /// limit data to be within bounds ///
-	float p_des = fminf(fmaxf(P_MIN, joint.p_des), P_MAX);                    
+	float p_des = fminf(fmaxf(P_MIN, joint.p_des + joint.p_init), P_MAX);                    
 	float v_des = fminf(fmaxf(V_MIN, joint.v_des), V_MAX);//将角速度限制在有效的范围内
 	float kp = fminf(fmaxf(KP_MIN, joint.kp), KP_MAX);
 	float kd = fminf(fmaxf(KD_MIN, joint.kd), KD_MAX);
 	float t_ff = fminf(fmaxf(T_MIN, joint.t_ff), T_MAX);
 	
-	t_ff = 5;
-	kp = 5;
-	kd = 1;
-	
 	/// convert floats to unsigned ints ///
-	uint16_t p_int = float_to_uint(p_des, P_MIN, P_MAX, 16);            
-	uint16_t v_int = float_to_uint(v_des, V_MIN, V_MAX, 12);
-	uint16_t kp_int = float_to_uint(kp, KP_MIN, KP_MAX, 12);
-	uint16_t kd_int = float_to_uint(kd, KD_MIN, KD_MAX, 12);
-	uint16_t t_int = float_to_uint(t_ff, T_MIN, T_MAX, 12);
+	uint16_t p_cmd = float_to_uint(p_des, P_MIN, P_MAX, 16);            
+	uint16_t v_cmd = float_to_uint(v_des, V_MIN, V_MAX, 12);
+	uint16_t kp_cmd = float_to_uint(kp, KP_MIN, KP_MAX, 12);
+	uint16_t kd_cmd = float_to_uint(kd, KD_MIN, KD_MAX, 12);
+	uint16_t t_cmd = float_to_uint(t_ff, T_MIN, T_MAX, 12);
 	/// pack ints into the can buffer ///
 
-	msg->Data[0] = p_int>>8;
-	msg->Data[1] = p_int&0xFF;
-	msg->Data[2] = v_int>>4;
-	msg->Data[3] = ((v_int&0xF)<<4)|(kp_int>>8);
-	msg->Data[4] = kp_int&0xFF;
-	msg->Data[5] = kd_int>>4;
+	msg->Data[0] = p_cmd>>8;
+	msg->Data[1] = p_cmd&0xFF;
+	msg->Data[2] = v_cmd>>4;
+	msg->Data[3] = ((v_cmd&0xF)<<4)|(kp_cmd>>8);
+	msg->Data[4] = kp_cmd&0xFF;
+	msg->Data[5] = kd_cmd>>4;
 
-	msg->Data[6] = 0x00|(t_int>>8);
-	msg->Data[7] = t_int&0xFF;
+	msg->Data[6] = 0x00|(t_cmd>>8);
+	msg->Data[7] = t_cmd&0xFF;
 }
 
 

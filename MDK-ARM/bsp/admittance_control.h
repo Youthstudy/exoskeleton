@@ -2,16 +2,17 @@
 #define  __ADMITTANCE_CONTROL_H__
 
 
-typedef double T;
+typedef float T;
 
-struct AdmittanceController{
+typedef struct {
 	// -- ADMITTANCE PARAMETERS --- //
 	// M_a_  Desired mass
 	// D_a_ Desired damping
-	// K_a_ Desired K
-	T M_a_, D_a_ , K_a_; 
+
+	T M_a_, D_a_; 
 	int frequency; // hz
 	
+	// -- CALLBACK -- //
 	
 	
 	
@@ -19,7 +20,7 @@ struct AdmittanceController{
 	// final arm desired velocity
 	T motor_desired_twist_;
 	
-};
+}AdmittanceController;
 
 
 

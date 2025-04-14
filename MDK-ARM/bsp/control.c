@@ -14,6 +14,13 @@ void joint_init(joint_control *joint){
 	joint->v_des = 0;
 }
 
+void motor_parameter_init(motor_parameter_typedef *mp){
+	mp->p_des = 0.0;
+	mp->t_ff = 0.0;
+	mp->v_des = 0.0;
+	mp->kd = 0.0;
+	mp->kp = 0.0;
+}
 
 
 void joint_set(joint_control *joint,float p_des, float v_des, float t_ff, float kp, float kd){

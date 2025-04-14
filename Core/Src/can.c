@@ -160,14 +160,16 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *canHandle)
 				switch (id){
 					case 1:
 						unpack_reply(joint[0].ret,&packet);
-					i++;
+						i++;
 					if(i < 50){
-					sum += joint[0].ret[0];}
+						sum += joint[0].ret[0];}
 					else if(i == 50){
 						joint[0].p_init = sum / 50.0f;
 					}
 						break;
-
+					case 2:
+						
+						break;
 					default: break;
 					
 				}

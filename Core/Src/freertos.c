@@ -25,12 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "my_task.h"
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define MOTOR_OUT_FRECANCY 1
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -45,13 +45,13 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+osThreadId motor_outputTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
+void vMottorOutputTask(void * parm);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
@@ -102,11 +102,15 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+//  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+//  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+	osThreadDef(vMottorOutputTask,StartDefaultTask,osPriorityAboveNormal,0,128);
+	motor_outputTaskHandle = osThreadCreate(osThread(vMottorOutputTask),NULL);
+	
+	xTaskCreate(vMottorOutputTask,"motor_output",1000,NULL,0,NULL);
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -131,5 +135,18 @@ void StartDefaultTask(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
+void vMottorOutputTask(void * parm){
+	TickType_t xLastWakeTime = xTaskGetTickCount();
+	const TickType_t xFrequency = pdMS_TO_TICKS(MOTOR_OUT_FRECANCY);
+	char str[] = "1\r\n";
+	int i = 0;
+	while(1)
+	{
+		i ++;
+		if(i % 1000 == 0)
+			HAL_UART_Transmit(&huart6,(uint8_t*)str,strlen(str),10);
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+	}
+	
+}
 /* USER CODE END Application */

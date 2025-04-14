@@ -93,6 +93,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   joint_init(&joint[0]);
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -104,11 +105,11 @@ int main(void)
   MX_UART8_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	
+	
   EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
-
-
+	
   // 临时电机参数设置
   HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
 	
@@ -122,22 +123,22 @@ int main(void)
 
   /* USER CODE END 2 */
 
-//  /* Call init function for freertos objects (in freertos.c) */
-//  MX_FREERTOS_Init();
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
 
-//  /* Start scheduler */
-//  osKernelStart();
+  /* Start scheduler */
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-    {
+//  while (1)
+//    {
 
-      /* USER CODE END WHILE */
+//      /* USER CODE END WHILE */
 
-      /* USER CODE BEGIN 3 */
-			pc_debug();
+//      /* USER CODE BEGIN 3 */
+//			pc_debug();
 //      key_count = KEY_Read();
 //      if (key_count == 1)
 //        {
@@ -147,15 +148,15 @@ int main(void)
 //      CAN1_Send_Msg(&TxHeader[0], 1);
 //      joint_set(&joint[0], 0, 0, 0, 5, 1);
 //      pack_cmd(&TxHeader[0], joint[0]);
-			
+//			
 //        }
 //      else
 //        {
 //					LED_mode(key_count);
 
 //        }
-      HAL_Delay(10);
-    }
+//      HAL_Delay(10);
+//    }
   /* USER CODE END 3 */
 }
 
@@ -207,9 +208,10 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 void pc_debug(void){
-	CAN1_Send_Msg(&TxHeader[0], 1);
+	
 	joint_pc_set(&joint[0],&motor_parameter);
 	pack_cmd(&TxHeader[0], joint[0]);
+	CAN1_Send_Msg(&TxHeader[0], 1);
 }
 
 /* USER CODE END 4 */

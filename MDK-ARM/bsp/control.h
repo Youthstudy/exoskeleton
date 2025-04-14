@@ -32,11 +32,11 @@ extern joint_control joint[2];
 
 // function
 void joint_init(joint_control *joint);
-
-void motor_parameter_init(motor_parameter_typedef *mp);
+void joint_setZero(joint_control *joint);
 
 void joint_set(joint_control *joint,float p_des, float v_des, float t_ff, float kp, float kd);
 void joint_pc_set(joint_control *joint, motor_parameter_typedef *parameter);
+
 
 #endif
 

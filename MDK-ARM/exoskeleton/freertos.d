@@ -57,6 +57,4 @@ exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timer
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
-exoskeleton\freertos.o: ./bsp/my_task.h
-exoskeleton\freertos.o: ../Core/Inc/stm32f4xx_it.h
-exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+exoskeleton\freertos.o: ../Core/Inc/usart.h
