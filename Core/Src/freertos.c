@@ -147,6 +147,5 @@ void vMottorOutputTask(void * parm){
 			HAL_UART_Transmit(&huart6,(uint8_t*)str,strlen(str),10);
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
-	
 }
 /* USER CODE END Application */
