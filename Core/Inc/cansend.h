@@ -8,7 +8,7 @@
 #define MOTOR 2  // 电机数量
 
 #define PI 3.1415926f
- #define P_MIN 0.0f   //0
+#define P_MIN 0.0f   //0
 #define P_MAX 4*PI
 #define V_MIN -30.0f   //30f
 #define V_MAX 30.0f
@@ -16,8 +16,9 @@
 #define KP_MAX 500.0f
 #define KD_MIN 0.0f     //0-100
 #define KD_MAX 100.0f
-#define T_MIN -48.0f    //-18   18
-#define T_MAX 48.0f
+#define T_MIN -15.0f    //-18   18
+#define T_MAX 15.0f
+
 
 typedef struct
 {

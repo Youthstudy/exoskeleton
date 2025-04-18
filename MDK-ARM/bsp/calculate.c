@@ -69,7 +69,6 @@ void Receive(Data_HandleTypedef *data_store)
 			break;
 		default:data_store->step=0;break;
 	}
-
 }
 
 

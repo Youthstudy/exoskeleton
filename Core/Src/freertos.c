@@ -30,7 +30,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define MOTOR_OUT_FRECANCY 1
+#define MOTOR_OUT_FRECANCY 1 // 1s/1000hz = 1ms
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -102,8 +102,8 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-//  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-//  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -134,7 +134,7 @@ void StartDefaultTask(void const * argument)
 }
 
 /* Private application code --------------------------------------------------*/
-/* USER CODE BEGIN Application */
+/* USER CODE BEG-IN Application */
 void vMottorOutputTask(void * parm){
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xFrequency = pdMS_TO_TICKS(MOTOR_OUT_FRECANCY);
@@ -144,7 +144,7 @@ void vMottorOutputTask(void * parm){
 	{
 		i ++;
 		if(i % 1000 == 0)
-			HAL_UART_Transmit(&huart6,(uint8_t*)str,strlen(str),10);
+			
 		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
 }
