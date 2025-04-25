@@ -8,8 +8,8 @@
 #define MOTOR 2  // 电机数量
 
 #define PI 3.1415926f
-#define P_MIN 0.0f   //0
-#define P_MAX 4*PI
+#define P_MIN -4*PI   //0
+#define P_MAX 4*PI 
 #define V_MIN -30.0f   //30f
 #define V_MAX 30.0f
 #define KP_MIN 0.0f    //0-500
@@ -46,5 +46,6 @@ void CAN_TxheaderInit(CAN_TxHeaderTypeDef *hdr, uint8_t id,uint8_t len);
 void CAN1_Send_Msg(CAN_TxPacketTypeDef *TxMessage, uint8_t id);
 void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
 
+void EnterMotorZero(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
 #endif
 

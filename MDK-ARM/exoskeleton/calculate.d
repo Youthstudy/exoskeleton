@@ -40,6 +40,7 @@ exoskeleton\calculate.o: ./bsp/calculate.h
 exoskeleton\calculate.o: ../Core/Inc/cansend.h
 exoskeleton\calculate.o: ./bsp/control.h
 exoskeleton\calculate.o: ./bsp/pid.h
+exoskeleton\calculate.o: ./bsp/filt.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
-exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

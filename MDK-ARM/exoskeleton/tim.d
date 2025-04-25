@@ -42,5 +42,7 @@ exoskeleton\tim.o: ../Core/Inc/cansend.h
 exoskeleton\tim.o: ./bsp/calculate.h
 exoskeleton\tim.o: ./bsp/control.h
 exoskeleton\tim.o: ./bsp/pid.h
+exoskeleton\tim.o: ./bsp/filt.h
 exoskeleton\tim.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\tim.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\tim.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

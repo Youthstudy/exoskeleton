@@ -1,4 +1,7 @@
 #include "calculate.h"
+#include "stdio.h"
+#include <stdlib.h>
+
 
 Data_HandleTypedef ImuData[4];
 
@@ -6,7 +9,6 @@ Data_HandleTypedef ImuData[4];
 void RecieveData_Init(Data_HandleTypedef *recievedata)
 {
 	memset(recievedata->RecieveBuffer,0,sizeof(recievedata->RecieveBuffer));
-	memset(recievedata->Data_Buffer,0,sizeof(recievedata->Data_Buffer));
 	recievedata->Class_Cnt = 0;
 	memset(recievedata->Truth_Data,0,sizeof(recievedata->Truth_Data));
 	recievedata->step = recievedata->cnt = 0;
@@ -52,33 +54,38 @@ void Receive(Data_HandleTypedef *data_store)
 		case 3:  //转移并处理buff数据，重置cnt,buff,step
 			if(Data_Check(data_store->buff) == 1)
 			{
-				memcpy(data_store->Data_Buffer[data_store->Class_Cnt],data_store->buff,sizeof(data_store->Data_Buffer[data_store->Class_Cnt]));
-				Data_Process(data_store->Data_Buffer[data_store->Class_Cnt],data_store->Truth_Data[data_store->Class_Cnt]);
-
-				data_store->Class_Cnt++;
-				if(data_store->Class_Cnt == CLASS_DATA)
-				{
-					data_store->Class_Cnt = 0;
-				}
+				Data_Process(data_store->buff,data_store->Truth_Data);
+				quat2Rotation(data_store->Truth_Data, data_store->Rotationmatrix,data_store->angle);
 			}
 			memset(data_store->buff,0,sizeof(data_store->buff));
 			data_store->cnt = data_store->step = 0;
 			break;
 		default:data_store->step=0;break;
 	}
-
 }
 
 
-void Receive_pc_debug(motor_parameter_typedef *mp){
+void Receive_pc_debug(joint_control *joint, motor_parameter_typedef *mp){
 	uint8_t bytedata;
 	bytedata = mp->RecieveBuffer[0];
-	if(bytedata == 0X0D){}
-		else if(bytedata == 0X2C){}
-else{
+	if(bytedata == 0X0A){
+		
+		mp->step = mp->cnt = 0;
+		memset(mp->str,0,sizeof(mp->str));
+	}
+	else if(bytedata == 0X2C){
+		mp->cnt = 0;
+		mp->buff[mp->step ++] = (float)atof(mp->str);
+		if(mp->step > 5){
+			mp->step = 0;
+		}
+		memset(mp->str,0,sizeof(mp->str));
+	}
+	else{
+		mp->str[(mp->cnt ++) % 30] = bytedata;
+	}
 }
-}
-
+ 
 void Data_Process(uint8_t *real_data,float *truth_data)
 {
 
@@ -109,6 +116,55 @@ int Data_Check(uint8_t *buff)
 	return flag;
 }
 
+void get_matix_init(float* init_matix,float* matix){
+	static int i = 0;
+	static float sum[9] = {0};
+	if(i < STARTWINDOW){
+		for(int j = 0; j < 9; j++){
+			sum[j] += matix[j];
+		}
+		i ++;
+	}else if(i == STARTWINDOW){
+		for(int j = 0; j < 9; j++){
+			init_matix[j] = sum[j] / STARTWINDOW;
+		}
+		i ++;
+	}
+}
 
+void quat2Rotation(float* Td, float* Rm,float* angle){
+	float norm = sqrt(Td[2] * Td[2] +Td[3] * Td[3]  + Td[4] * Td[4]  + Td[5] * Td[5] );
+	float w = Td[2]/ norm;
+	float x = Td[3]/ norm;
+	float y = Td[4]/ norm;
+	float z = Td[5]/ norm;
 
+	float xx = x * x;
+	float xy = x * y;
+	float xz = x * z;
+	float xw = x * w;
+
+	float yy = y * y;
+	float yz = y * z;
+	float yw = y * w;
+
+	float zz = z * z;
+	float zw = z * w;
+
+	Rm[0] = 1 - 2 * (yy + zz);
+	Rm[1] = 2 * (xy - zw);
+	Rm[2] = 2 * (xz + yw);
+
+	Rm[3]  = 2 * (xy + zw);
+	Rm[4]  = 1 - 2 * (xx + zz);
+	Rm[5] = 2 * (yz - xw);
+
+	Rm[6] = 2 * (xz - yw);
+	Rm[7] = 2 * (yz + xw);
+	Rm[8] = 1 - 2 * (xx + yy);
+	
+	for(int i= 0; i < 9; i++){
+		angle[i] = acosf(Rm[i]);
+	}
+}
 

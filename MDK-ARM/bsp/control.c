@@ -5,13 +5,18 @@ joint_control joint[2];
 motor_parameter_typedef motor_parameter;
 
 void joint_init(joint_control *joint){
-	joint->kp = 0;
-	joint->kd = 0;
+	joint->kp = 15;
+	joint->kd = 10;
 	joint->p_des = 0;
 	joint->p_init = 0;
 	memset(joint->ret,0,sizeof(joint->ret));
 	joint->t_ff = 0;
 	joint->v_des = 0;
+	joint->status = 0;
+	for(int i = 0 ; i < 3; i++){
+	FILT_init(&joint->filt[i]);
+	Kalman_Init(&joint->kfilter[i],0.02,0.001,0.5);
+	}
 }
 
 void motor_parameter_init(motor_parameter_typedef *mp){
@@ -20,6 +25,8 @@ void motor_parameter_init(motor_parameter_typedef *mp){
 	mp->v_des = 0.0;
 	mp->kd = 0.0;
 	mp->kp = 0.0;
+	mp->Force_time = -1;
+	memset(mp->buff,1,sizeof(mp->buff));
 }
 
 

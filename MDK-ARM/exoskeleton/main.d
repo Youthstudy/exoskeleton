@@ -41,7 +41,9 @@ exoskeleton\main.o: ../Core/Inc/cansend.h
 exoskeleton\main.o: ./bsp/calculate.h
 exoskeleton\main.o: ./bsp/control.h
 exoskeleton\main.o: ./bsp/pid.h
+exoskeleton\main.o: ./bsp/filt.h
 exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
@@ -60,3 +62,4 @@ exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_gro
 exoskeleton\main.o: ../Core/Inc/tim.h
 exoskeleton\main.o: ../Core/Inc/usart.h
 exoskeleton\main.o: ../Core/Inc/gpio.h
+exoskeleton\main.o: ./bsp/admittance_control.h

@@ -186,7 +186,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -813,6 +813,26 @@
               <FileName>admittance_control.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\bsp\admittance_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>impedance_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\impedance_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>filt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\filt.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\my_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>FSM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\FSM.c</FilePath>
             </File>
           </Files>
         </Group>

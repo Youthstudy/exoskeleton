@@ -1,0 +1,9 @@
+exoskeleton\impedance_control.o: bsp\impedance_control.c
+exoskeleton\impedance_control.o: bsp\impandance_control.h
+exoskeleton\impedance_control.o: bsp\control.h
+exoskeleton\impedance_control.o: bsp\pid.h
+exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\impedance_control.o: bsp\filt.h
+exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h

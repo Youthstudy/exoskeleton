@@ -39,5 +39,8 @@ exoskeleton\can.o: ../Core/Inc/cansend.h
 exoskeleton\can.o: ../Core/Inc/can.h
 exoskeleton\can.o: ./bsp/control.h
 exoskeleton\can.o: ./bsp/pid.h
+exoskeleton\can.o: ./bsp/filt.h
 exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\can.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
+exoskeleton\can.o: ../Core/Inc/usart.h

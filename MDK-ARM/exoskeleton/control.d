@@ -3,4 +3,7 @@ exoskeleton\control.o: bsp\control.h
 exoskeleton\control.o: bsp\pid.h
 exoskeleton\control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
 exoskeleton\control.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\control.o: bsp\filt.h
+exoskeleton\control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\control.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

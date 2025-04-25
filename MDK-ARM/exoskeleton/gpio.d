@@ -42,5 +42,7 @@ exoskeleton\gpio.o: ../Core/Inc/cansend.h
 exoskeleton\gpio.o: ./bsp/calculate.h
 exoskeleton\gpio.o: ./bsp/control.h
 exoskeleton\gpio.o: ./bsp/pid.h
+exoskeleton\gpio.o: ./bsp/filt.h
 exoskeleton\gpio.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\gpio.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\gpio.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

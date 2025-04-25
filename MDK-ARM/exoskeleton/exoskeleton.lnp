@@ -32,6 +32,10 @@
 "exoskeleton\calculate.o"
 "exoskeleton\control.o"
 "exoskeleton\admittance_control.o"
+"exoskeleton\impedance_control.o"
+"exoskeleton\filt.o"
+"exoskeleton\my_task.o"
+"exoskeleton\fsm.o"
 "exoskeleton\croutine.o"
 "exoskeleton\event_groups.o"
 "exoskeleton\list.o"
@@ -42,7 +46,7 @@
 "exoskeleton\cmsis_os.o"
 "exoskeleton\heap_4.o"
 "exoskeleton\port.o"
---strict --scatter "exoskeleton\exoskeleton.sct"
+--library_type=microlib --strict --scatter "exoskeleton\exoskeleton.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "exoskeleton.map" -o exoskeleton\exoskeleton.axf

@@ -41,3 +41,5 @@ exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\cansend.o: ./bsp/control.h
 exoskeleton\cansend.o: ./bsp/pid.h
+exoskeleton\cansend.o: ./bsp/filt.h
+exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h

@@ -5,69 +5,70 @@
 
 Data_HandleTypedef ImuData[4];
 
+void DataInit_init(DataInit_HandleTypedf* d){
+	d->i = 0;
+	memset(d->sum,0,sizeof(d->sum));
+}
 
 void RecieveData_Init(Data_HandleTypedef *recievedata)
 {
 	memset(recievedata->RecieveBuffer,0,sizeof(recievedata->RecieveBuffer));
-	memset(recievedata->Data_Buffer,0,sizeof(recievedata->Data_Buffer));
 	recievedata->Class_Cnt = 0;
-	memset(recievedata->Truth_Data,0,sizeof(recievedata->Truth_Data));
 	recievedata->step = recievedata->cnt = 0;
+	
+	memset(recievedata->Truth_Data,0,sizeof(recievedata->Truth_Data));
 	memset(recievedata->buff,0,sizeof(recievedata->buff));
+	memset(recievedata->Rotationmatrix,0,sizeof(recievedata->Rotationmatrix));
+	memset(recievedata->angle,0,sizeof(recievedata->angle));
+	memset(recievedata->angle_init,0,sizeof(recievedata->angle_init));
+	DataInit_init(&recievedata->init);
 }
 
-void Receive(Data_HandleTypedef *data_store)
+void Receive(Data_HandleTypedef *ds)
 {
 	uint8_t bytedata;
-	bytedata = data_store->RecieveBuffer[0];
+	bytedata = ds->RecieveBuffer[0];
 	
-	switch(data_store->step)
+	switch(ds->step)
 	{
 		case 0: //包头
 			if(bytedata == 0x3A)
 			{
-				data_store->step++;
-				data_store->cnt = 0;
-				data_store->buff[data_store->cnt++] = bytedata;
+				ds->step++;
+				ds->cnt = 0;
+				ds->buff[ds->cnt++] = bytedata;
 			}
 			break;
 		case 1:	//低位包尾
 			if(bytedata == 0x0D)
 			{
-				data_store->step++;
-				data_store->buff[data_store->cnt++] = bytedata;
+				ds->step++;
+				ds->buff[ds->cnt++] = bytedata;
 			}else
 			{
-				data_store->buff[data_store->cnt++] = bytedata;
+				ds->buff[ds->cnt++] = bytedata;
 			}
 			break;
 		case 2: //高位包尾
 			if(bytedata == 0x0A)
 			{
-				data_store->step ++;
-				data_store->buff[data_store->cnt++] = bytedata;
+				ds->step ++;
+				ds->buff[ds->cnt++] = bytedata;
 			}else
 			{
-				data_store->step = 1;
-				data_store->buff[data_store->cnt++] = bytedata;
+				ds->step = 1;
+				ds->buff[ds->cnt++] = bytedata;
 			}
 			break;
 		case 3:  //转移并处理buff数据，重置cnt,buff,step
-			if(Data_Check(data_store->buff) == 1)
+			if(Data_Check(ds->buff) == 1)
 			{
-				memcpy(data_store->Data_Buffer[data_store->Class_Cnt],data_store->buff,sizeof(data_store->Data_Buffer[data_store->Class_Cnt]));
-				Data_Process(data_store->Data_Buffer[data_store->Class_Cnt],data_store->Truth_Data[data_store->Class_Cnt]);
-
-				data_store->Class_Cnt++;
-				if(data_store->Class_Cnt == CLASS_DATA)
-				{
-					data_store->Class_Cnt = 0;
-				}
+				Data_Process(ds->buff,ds->Truth_Data);
+				quat2Rotation(ds->Truth_Data, ds->Rotationmatrix,ds->angle,ds->angle_init);
 			}
-			memset(data_store->buff,0,sizeof(data_store->buff));
-			data_store->cnt = data_store->step = 0;
+			ds->cnt = ds->step = 0;
 			break;
-		default:data_store->step=0;break;
+		default:ds->step=0;break;
 	}
 }
 
@@ -83,13 +84,13 @@ void Receive_pc_debug(joint_control *joint, motor_parameter_typedef *mp){
 	else if(bytedata == 0X2C){
 		mp->cnt = 0;
 		mp->buff[mp->step ++] = (float)atof(mp->str);
-		if(mp->step > 5){
+		if(mp->step > PC_RECIEVE_LEN){
 			mp->step = 0;
 		}
 		memset(mp->str,0,sizeof(mp->str));
 	}
 	else{
-		mp->str[(mp->cnt ++) % 30] = bytedata;
+		mp->str[(mp->cnt ++) % PC_BUFFER] = bytedata;
 	}
 }
  
@@ -123,6 +124,53 @@ int Data_Check(uint8_t *buff)
 	return flag;
 }
 
+void get_angle_init(float* init_matix,float* matrix,DataInit_HandleTypedf* D_i){
+	if(D_i->i < STARTWINDOW){
+		for(int j = 0; j < sizeof(D_i->sum); j ++){
+			D_i->sum[j] += matrix[j];
+		}
+		D_i->i ++;
+	}else if(D_i->i == STARTWINDOW){
+		for(int j = 0; j < sizeof(D_i->sum); j ++){
+			init_matix[j] = D_i->sum[j] / STARTWINDOW;
+		}
+		D_i->i ++;
+	}
+}
 
+void quat2Rotation(float* Td, float* Rm,float* angle, float* angle_init){
+	float norm = sqrt(Td[2] * Td[2] +Td[3] * Td[3]  + Td[4] * Td[4]  + Td[5] * Td[5] );
+	float w = Td[2]/ norm;
+	float x = Td[3]/ norm;
+	float y = Td[4]/ norm;
+	float z = Td[5]/ norm;
 
+	float xx = x * x;
+	float xy = x * y;
+	float xz = x * z;
+	float xw = x * w;
+
+	float yy = y * y;
+	float yz = y * z;
+	float yw = y * w;
+
+	float zz = z * z;
+	float zw = z * w;
+
+	Rm[0] = 1 - 2 * (yy + zz);
+	Rm[1] = 2 * (xy - zw);
+	Rm[2] = 2 * (xz + yw);
+
+	Rm[3]  = 2 * (xy + zw);
+	Rm[4]  = 1 - 2 * (xx + zz);
+	Rm[5] = 2 * (yz - xw);
+
+	Rm[6] = 2 * (xz - yw);
+	Rm[7] = 2 * (yz + xw);
+	Rm[8] = 1 - 2 * (xx + yy);
+	
+	for(int i= 0; i < 9; i++){
+		angle[i] = acosf(Rm[i]) - angle_init[i];
+	}
+}
 

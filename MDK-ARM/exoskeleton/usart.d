@@ -42,5 +42,7 @@ exoskeleton\usart.o: ../Core/Inc/cansend.h
 exoskeleton\usart.o: ./bsp/calculate.h
 exoskeleton\usart.o: ./bsp/control.h
 exoskeleton\usart.o: ./bsp/pid.h
+exoskeleton\usart.o: ./bsp/filt.h
 exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

@@ -50,7 +50,9 @@ exoskeleton\freertos.o: ../Core/Inc/cansend.h
 exoskeleton\freertos.o: ./bsp/calculate.h
 exoskeleton\freertos.o: ./bsp/control.h
 exoskeleton\freertos.o: ./bsp/pid.h
+exoskeleton\freertos.o: ./bsp/filt.h
 exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
 exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
@@ -58,3 +60,4 @@ exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 exoskeleton\freertos.o: ../Core/Inc/usart.h
+exoskeleton\freertos.o: ./bsp/my_task.h

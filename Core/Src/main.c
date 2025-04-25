@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "admittance_control.h"
 
 //#include "usbd_cdc_if.c"
 
@@ -50,7 +50,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+int cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,7 +92,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  joint_init(&joint[0]);
+
 
   /* USER CODE END SysInit */
 
@@ -114,8 +114,10 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim3);
 	
 	
+
   EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
+//	EnterMotorZero(&TxHeader[0], 1); 
 	
   // 临时电机参数设置
   HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
@@ -123,14 +125,21 @@ int main(void)
 
 
 //	IMU设置打开四元数，线性加速度
-  HAL_UART_Receive_IT(&huart2, ImuData[0].RecieveBuffer, BUFFER_LEN);
-	HAL_UART_Receive_IT(&huart3, ImuData[1].RecieveBuffer, BUFFER_LEN);
-  HAL_UART_Receive_IT(&huart7, ImuData[2].RecieveBuffer, BUFFER_LEN);
-  HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
+//  HAL_UART_Receive_IT(&huart2, ImuData[0].RecieveBuffer, BUFFER_LEN);
+//	HAL_UART_Receive_IT(&huart3, ImuData[1].RecieveBuffer, BUFFER_LEN);
+  HAL_UART_Receive_IT(&huart7, ImuData[0].RecieveBuffer, BUFFER_LEN);
+//  HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
 
+	joint_init(&joint[0]);
+	HAL_Delay(100);
+	
+	// 初始化
+	int j = 0;
+	
+	
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
+//  /* Call init function for freertos objects (in freertos.c) */
 //  MX_FREERTOS_Init();
 
 //  /* Start scheduler */
@@ -145,6 +154,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+			if(j == 0){
+				for(int i = 0; i < MOTOR; i++){
+					if(joint[i].p_init != 0){
+						Admittance_init(&ACtrl[i],&joint[i],0.01,0.8318,100);
+						j ++;
+					}
+				}
+			}
 			pc_debug();
 //      key_count = KEY_Read();
 //      if (key_count == 1)
@@ -215,9 +232,8 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 void pc_debug(void){
-	joint_pc_set(&joint[0],&motor_parameter);
-	pack_cmd(&TxHeader[0], joint[0]);
-	CAN1_Send_Msg(&TxHeader[0], 1);
+	Admittance_pc_set(&ACtrl[0],&motor_parameter);
+
 }
 
 /* USER CODE END 4 */
@@ -234,6 +250,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 	if (htim->Instance == TIM6) {
+		for(int i = 0; i < 1; i++){
+			Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
+		}
+		if(motor_parameter.Force_time > 0){
+			motor_parameter.Force_time -= 0.001f;
+		}
+		ACtrl[0].Force = motor_parameter.Force_time > 0? ACtrl[0].Force : 0.0f ;
+		pack_cmd(&TxHeader[0], joint[0]);
+		CAN1_Send_Msg(&TxHeader[0], 1);
+	}else if(htim->Instance == TIM3){
+		
+		//	joint_pc_set(&joint[0],&motor_parameter);
+
+
 	}
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {

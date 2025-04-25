@@ -26,11 +26,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usart.h"
+#include "my_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define MOTOR_OUT_FRECANCY 1 // 1s/1000hz = 1ms
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -45,13 +46,13 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-osThreadId motor_outputTaskHandle;
+osThreadId controlTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-void vMottorOutputTask(void * parm);
+
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
@@ -107,10 +108,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-	osThreadDef(vMottorOutputTask,StartDefaultTask,osPriorityAboveNormal,0,128);
-	motor_outputTaskHandle = osThreadCreate(osThread(vMottorOutputTask),NULL);
-	
-	xTaskCreate(vMottorOutputTask,"motor_output",1000,NULL,0,NULL);
+	osThreadDef(Acontrol, vControlOutputTask, osPriorityNormal, 0, 128);
+	controlTaskHandle = osThreadCreate(osThread(Acontrol), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -134,18 +133,6 @@ void StartDefaultTask(void const * argument)
 }
 
 /* Private application code --------------------------------------------------*/
-/* USER CODE BEG-IN Application */
-void vMottorOutputTask(void * parm){
-	TickType_t xLastWakeTime = xTaskGetTickCount();
-	const TickType_t xFrequency = pdMS_TO_TICKS(MOTOR_OUT_FRECANCY);
-	char str[] = "1\r\n";
-	int i = 0;
-	while(1)
-	{
-		i ++;
-		if(i % 1000 == 0)
-			
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
-	}
-}
+/* USER CODE BEGIN Application */
+
 /* USER CODE END Application */
