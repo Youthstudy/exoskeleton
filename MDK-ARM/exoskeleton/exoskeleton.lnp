@@ -36,6 +36,8 @@
 "exoskeleton\filt.o"
 "exoskeleton\my_task.o"
 "exoskeleton\fsm.o"
+"exoskeleton\myqueue.o"
+"exoskeleton\routeq.o"
 "exoskeleton\croutine.o"
 "exoskeleton\event_groups.o"
 "exoskeleton\list.o"

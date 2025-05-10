@@ -1,7 +1,7 @@
 #include "calculate.h"
 #include "stdio.h"
 #include <stdlib.h>
-
+#include "RouteQ.h"
 
 Data_HandleTypedef ImuData[4];
 
@@ -22,12 +22,18 @@ void RecieveData_Init(Data_HandleTypedef *recievedata)
 	memset(recievedata->angle,0,sizeof(recievedata->angle));
 	memset(recievedata->angle_init,0,sizeof(recievedata->angle_init));
 	DataInit_init(&recievedata->init);
+	
+	Cqueue_Init(&recievedata->q);
 }
 
 void Receive(Data_HandleTypedef *ds)
 {
+	if(Cqueue_empty(&ds->q)){
+		return ;
+	}
 	uint8_t bytedata;
-	bytedata = ds->RecieveBuffer[0];
+	bytedata = Cqueue_head(&ds->q);
+	Cqueue_pop(&ds->q);
 	
 	switch(ds->step)
 	{

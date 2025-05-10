@@ -33,8 +33,11 @@ exoskeleton\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 exoskeleton\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-exoskeleton\usart.o: ./bsp/calculate.h
+exoskeleton\usart.o: ./bsp/RouteQ.h
 exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
+exoskeleton\usart.o: ./bsp/calculate.h
 exoskeleton\usart.o: ../Core/Inc/cansend.h
 exoskeleton\usart.o: ../Core/Inc/can.h
 exoskeleton\usart.o: ../Core/Inc/main.h
@@ -43,6 +46,4 @@ exoskeleton\usart.o: ./bsp/calculate.h
 exoskeleton\usart.o: ./bsp/control.h
 exoskeleton\usart.o: ./bsp/pid.h
 exoskeleton\usart.o: ./bsp/filt.h
-exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

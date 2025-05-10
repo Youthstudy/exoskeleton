@@ -161,8 +161,12 @@ int main(void)
 						j ++;
 					}
 				}
-			}
+			} 
 			pc_debug();
+			
+			for(int i = 0; i < 4; i ++){
+				Receive(&ImuData[i]);
+			}
 //      key_count = KEY_Read();
 //      if (key_count == 1)
 //        {
@@ -250,15 +254,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 	if (htim->Instance == TIM6) {
-		for(int i = 0; i < 1; i++){
-			Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
+			for(int i = 0; i < 1; i++){
+				Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
+				
+			}
+			if(motor_parameter.Force_time > 0){
+				motor_parameter.Force_time -= 0.001f;
+			}
+			ACtrl[0].Force = motor_parameter.Force_time > 0? ACtrl[0].Force : 0.0f ;
+
+		for(int i = 0; i < 2; i ++){
+			pack_cmd(&TxHeader[i], joint[i]);
+			CAN1_Send_Msg(&TxHeader[i], i+1);
 		}
-		if(motor_parameter.Force_time > 0){
-			motor_parameter.Force_time -= 0.001f;
-		}
-		ACtrl[0].Force = motor_parameter.Force_time > 0? ACtrl[0].Force : 0.0f ;
-		pack_cmd(&TxHeader[0], joint[0]);
-		CAN1_Send_Msg(&TxHeader[0], 1);
 	}else if(htim->Instance == TIM3){
 		
 		//	joint_pc_set(&joint[0],&motor_parameter);

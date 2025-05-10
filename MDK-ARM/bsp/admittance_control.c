@@ -5,7 +5,7 @@
 
 // 0.01 0.8318 100
 
-AdmittanceController ACtrl[1];
+AdmittanceController ACtrl[2];
  
 void Admittance_init(AdmittanceController* ac,joint_control* joint,T M_a,T D_a,T K_a_){
 	ac->M_a_ = M_a;

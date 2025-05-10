@@ -48,7 +48,7 @@ typedef struct {
 	
 }AdmittanceController;
 
-extern AdmittanceController ACtrl[1];
+extern AdmittanceController ACtrl[2];
 
 void Admittance_init(AdmittanceController* ac,joint_control* joint,T M_a,T D_a,T K_a_);
 void Admittance_set(AdmittanceController* ctrl, T M_a, T D_a,T K_a_);

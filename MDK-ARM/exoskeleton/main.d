@@ -32,8 +32,11 @@ exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-exoskeleton\main.o: ./bsp/calculate.h
+exoskeleton\main.o: ./bsp/RouteQ.h
 exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
+exoskeleton\main.o: ./bsp/calculate.h
 exoskeleton\main.o: ../Core/Inc/cansend.h
 exoskeleton\main.o: ../Core/Inc/can.h
 exoskeleton\main.o: ../Core/Inc/main.h
@@ -42,9 +45,7 @@ exoskeleton\main.o: ./bsp/calculate.h
 exoskeleton\main.o: ./bsp/control.h
 exoskeleton\main.o: ./bsp/pid.h
 exoskeleton\main.o: ./bsp/filt.h
-exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 exoskeleton\main.o: ../Core/Inc/FreeRTOSConfig.h

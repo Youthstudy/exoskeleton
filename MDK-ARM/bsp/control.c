@@ -13,6 +13,7 @@ void joint_init(joint_control *joint){
 	joint->t_ff = 0;
 	joint->v_des = 0;
 	joint->status = 0;
+	joint->moveflag = 0;
 	for(int i = 0 ; i < 3; i++){
 	FILT_init(&joint->filt[i]);
 	Kalman_Init(&joint->kfilter[i],0.02,0.001,0.5);

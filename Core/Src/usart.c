@@ -22,6 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "stdio.h"
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart7;
@@ -422,8 +423,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   if(huart->Instance == USART3)
     {
 
-      Receive(&ImuData[0]);
-      HAL_UART_Receive_IT(&huart3, ImuData[1].RecieveBuffer, BUFFER_LEN);
+      Cqueue_push(&ImuData[0].q,ImuData[0].RecieveBuffer[0]);
+      HAL_UART_Receive_IT(&huart3, ImuData[0].RecieveBuffer, BUFFER_LEN);
     }
   else if(huart->Instance == USART6)
     {
@@ -435,19 +436,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   else if(huart->Instance == UART7)
     {
 
-      Receive(&ImuData[0]);
+      Cqueue_push(&ImuData[0].q,ImuData[0].RecieveBuffer[0]);
 			get_angle_init(ImuData[0].angle_init,ImuData[0].angle , &ImuData[0].init);
       HAL_UART_Receive_IT(&huart7, ImuData[0].RecieveBuffer, BUFFER_LEN);
     }
   else if(huart->Instance == UART8)
     {
 
-      Receive(&ImuData[3]);
+      Cqueue_push(&ImuData[3].q,ImuData[3].RecieveBuffer[0]);
       HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
     }
   else if(huart->Instance == USART2)
     {
-      Receive(&ImuData[0]);
+      Cqueue_push(&ImuData[0].q,ImuData[0].RecieveBuffer[0]);
       HAL_UART_Receive_IT(&huart2, ImuData[0].RecieveBuffer, BUFFER_LEN);
     }
 

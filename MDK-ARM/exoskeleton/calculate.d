@@ -1,6 +1,10 @@
 exoskeleton\calculate.o: bsp\calculate.c
 exoskeleton\calculate.o: bsp\calculate.h
+exoskeleton\calculate.o: bsp\RouteQ.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\calculate.o: ../Core/Inc/cansend.h
 exoskeleton\calculate.o: ../Core/Inc/can.h
 exoskeleton\calculate.o: ../Core/Inc/main.h
@@ -11,7 +15,6 @@ exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f427xx.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Include/core_cm4.h
-exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Include/cmsis_version.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 exoskeleton\calculate.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -41,6 +44,4 @@ exoskeleton\calculate.o: ../Core/Inc/cansend.h
 exoskeleton\calculate.o: ./bsp/control.h
 exoskeleton\calculate.o: ./bsp/pid.h
 exoskeleton\calculate.o: ./bsp/filt.h
-exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

@@ -333,7 +333,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F427xx</Define>
+              <Define>USE_HAL_DRIVER,STM32F427xx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;./bsp;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/Third_Party/FreeRTOS</IncludePath>
             </VariousControls>
@@ -833,6 +833,11 @@
               <FileName>FSM.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\bsp\FSM.c</FilePath>
+            </File>
+            <File>
+              <FileName>RouteQ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\RouteQ.c</FilePath>
             </File>
           </Files>
         </Group>

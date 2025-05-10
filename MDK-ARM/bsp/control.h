@@ -17,6 +17,8 @@ typedef struct
 	KalmanFilter_HandleTypedef kfilter[3];
 	float p_init;
 	int status;
+	
+	int moveflag; // 动作标志
 }joint_control;
 
 // pc 输入测试结构体

@@ -41,8 +41,11 @@ exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-exoskeleton\freertos.o: ./bsp/calculate.h
+exoskeleton\freertos.o: ./bsp/RouteQ.h
 exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
+exoskeleton\freertos.o: ./bsp/calculate.h
 exoskeleton\freertos.o: ../Core/Inc/cansend.h
 exoskeleton\freertos.o: ../Core/Inc/can.h
 exoskeleton\freertos.o: ../Core/Inc/main.h
@@ -51,9 +54,7 @@ exoskeleton\freertos.o: ./bsp/calculate.h
 exoskeleton\freertos.o: ./bsp/control.h
 exoskeleton\freertos.o: ./bsp/pid.h
 exoskeleton\freertos.o: ./bsp/filt.h
-exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

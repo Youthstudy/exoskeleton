@@ -31,6 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "RouteQ.h"
 #include "calculate.h"
 #include "cansend.h"
 #include "control.h"
