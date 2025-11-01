@@ -24,6 +24,7 @@ exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
+exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -60,7 +61,9 @@ exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+exoskeleton\main.o: ../Core/Inc/crc.h
 exoskeleton\main.o: ../Core/Inc/tim.h
 exoskeleton\main.o: ../Core/Inc/usart.h
 exoskeleton\main.o: ../Core/Inc/gpio.h
 exoskeleton\main.o: ./bsp/admittance_control.h
+exoskeleton\main.o: ./bsp/impandance_control.h

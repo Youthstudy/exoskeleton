@@ -31,6 +31,7 @@ exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
+exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 exoskeleton\calculate.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -45,3 +46,4 @@ exoskeleton\calculate.o: ./bsp/control.h
 exoskeleton\calculate.o: ./bsp/pid.h
 exoskeleton\calculate.o: ./bsp/filt.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\calculate.o: ../Core/Inc/usart.h

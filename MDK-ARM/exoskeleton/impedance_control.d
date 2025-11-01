@@ -7,3 +7,4 @@ exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 exoskeleton\impedance_control.o: bsp\filt.h
 exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\impedance_control.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

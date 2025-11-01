@@ -33,6 +33,7 @@ exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
+exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_crc.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -62,3 +63,4 @@ exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semph
 exoskeleton\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 exoskeleton\freertos.o: ../Core/Inc/usart.h
 exoskeleton\freertos.o: ./bsp/my_task.h
+exoskeleton\freertos.o: ./bsp/TCPsend.h

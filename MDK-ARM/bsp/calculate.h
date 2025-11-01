@@ -9,9 +9,8 @@
 
 
 #define BUFFER_LEN 1
-#define DATA_FRAME_LEN 29
-#define CLASS_DATA 1
-#define NEED_DATA 9
+#define DATA_FRAME_LEN 35
+#define NEED_DATA 12
 
 #define STARTWINDOW 50.0f
 
@@ -30,6 +29,7 @@ typedef struct
 	float Rotationmatrix[9];
 	float angle[9];
 	float angle_init[9];
+	float time;
 	DataInit_HandleTypedf init;
 	RouteQ q;
 } Data_HandleTypedef;

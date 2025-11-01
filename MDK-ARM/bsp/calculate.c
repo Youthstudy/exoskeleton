@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include <stdlib.h>
 #include "RouteQ.h"
+#include "usart.h"
 
 Data_HandleTypedef ImuData[4];
 
@@ -15,7 +16,6 @@ void RecieveData_Init(Data_HandleTypedef *recievedata)
 	memset(recievedata->RecieveBuffer,0,sizeof(recievedata->RecieveBuffer));
 	recievedata->Class_Cnt = 0;
 	recievedata->step = recievedata->cnt = 0;
-	
 	memset(recievedata->Truth_Data,0,sizeof(recievedata->Truth_Data));
 	memset(recievedata->buff,0,sizeof(recievedata->buff));
 	memset(recievedata->Rotationmatrix,0,sizeof(recievedata->Rotationmatrix));
@@ -28,47 +28,48 @@ void RecieveData_Init(Data_HandleTypedef *recievedata)
 
 void Receive(Data_HandleTypedef *ds)
 {
-	if(Cqueue_empty(&ds->q)){
+	uint8_t bytedata;
+	if(!Cqueue_pop(&ds->q,&bytedata)){
 		return ;
 	}
-	uint8_t bytedata;
-	bytedata = Cqueue_head(&ds->q);
-	Cqueue_pop(&ds->q);
 	
 	switch(ds->step)
 	{
-		case 0: //°üÍ·
+		case 0: //ï¿½ï¿½Í·
 			if(bytedata == 0x3A)
 			{
-				ds->step++;
+				ds->step = 1;
 				ds->cnt = 0;
 				ds->buff[ds->cnt++] = bytedata;
 			}
 			break;
-		case 1:	//µÍÎ»°üÎ²
-			if(bytedata == 0x0D)
+		case 1:	//ï¿½ï¿½Î»ï¿½ï¿½Î²
+			if(bytedata == 0x0D && ds->cnt == DATA_FRAME_LEN - 2)
 			{
-				ds->step++;
+				ds->step = 2;
 				ds->buff[ds->cnt++] = bytedata;
-			}else
+			}else if(ds->cnt < DATA_FRAME_LEN)
 			{
 				ds->buff[ds->cnt++] = bytedata;
+			}else{
+				ds->cnt = ds->step = 0;
 			}
 			break;
-		case 2: //¸ßÎ»°üÎ²
-			if(bytedata == 0x0A)
+		case 2: //ï¿½ï¿½Î»ï¿½ï¿½Î²
+			if(bytedata == 0x0A && ds->cnt == DATA_FRAME_LEN - 1)
 			{
-				ds->step ++;
+				ds->step = 3;
 				ds->buff[ds->cnt++] = bytedata;
-			}else
+			}else if(ds->cnt < DATA_FRAME_LEN)
 			{
-				ds->step = 1;
 				ds->buff[ds->cnt++] = bytedata;
+			}else{
+				ds->cnt = ds->step = 0;
 			}
 			break;
-		case 3:  //×ªÒÆ²¢´¦ÀíbuffÊý¾Ý£¬ÖØÖÃcnt,buff,step
-			if(Data_Check(ds->buff) == 1)
-			{
+		case 3:  //×ªï¿½Æ²ï¿½ï¿½ï¿½ï¿½ï¿½buffï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½cnt,buff,step
+			if(Data_Check(ds->buff) == 1 ){
+				HAL_UART_Transmit(&huart6,ds->buff,sizeof(ds->buff),0xffff);
 				Data_Process(ds->buff,ds->Truth_Data);
 				quat2Rotation(ds->Truth_Data, ds->Rotationmatrix,ds->angle,ds->angle_init);
 			}
@@ -87,7 +88,7 @@ void Receive_pc_debug(joint_control *joint, motor_parameter_typedef *mp){
 		mp->step = mp->cnt = 0;
 		memset(mp->str,0,sizeof(mp->str));
 	}
-	else if(bytedata == 0X2C){
+	else if(bytedata == 0X2C){ // å¤„ç†é€—å·åˆ†éš” 1,2,1,/r/n
 		mp->cnt = 0;
 		mp->buff[mp->step ++] = (float)atof(mp->str);
 		if(mp->step > PC_RECIEVE_LEN){
@@ -105,21 +106,38 @@ void Data_Process(uint8_t *real_data,float *truth_data)
 
 	truth_data[0] = (short)(real_data[1] | (real_data[2] << 8));
 	truth_data[1] = (double)(real_data[7] | (real_data[8] << 8) | (real_data[9] << 16) | (real_data[10] << 24)) / 400.0 ;
-	truth_data[2] = ((short)(real_data[11] | (real_data[12]<<8))) / 10000.0;	//w
-	truth_data[3] = ((short)(real_data[13] | (real_data[14]<<8))) / 10000.0;	//x
-	truth_data[4] = ((short)(real_data[15] | (real_data[16]<<8))) / 10000.0;	//y
-	truth_data[5] = ((short)(real_data[17] | (real_data[18]<<8))) / 10000.0;	//z
-	truth_data[6] = ((short)(real_data[19] | (real_data[20]<<8))) / 1000.0;	//acc_x
-	truth_data[7] = ((short)(real_data[21] | (real_data[22]<<8))) / 1000.0; //y
-	truth_data[8] = ((short)(real_data[23] | (real_data[24]<<8))) / 1000.0; //z
+	float mod = 1.0f;
+	int index = 11;
+	for(int i = 2; i < NEED_DATA; i ++){
+		int tmp = i - 2;
+		if(tmp < 3){
+			mod = 1000.0;
+		}else if(3 <= tmp && tmp < 7){
+			mod = 10000.0;
+		}else if(7 <= tmp && tmp < 10){
+			mod = 1000.0;
+		}
+		truth_data[i] = ((short)(real_data[index] | (real_data[index + 1]<<8))) / mod;
+		index += 2;
+	}
+//	truth_data[2] = ((short)(real_data[11] | (real_data[12]<<8))) / 10000.0;	//w
+//	truth_data[3] = ((short)(real_data[13] | (real_data[14]<<8))) / 10000.0;	//x
+//	truth_data[4] = ((short)(real_data[15] | (real_data[16]<<8))) / 10000.0;	//y
+//	truth_data[5] = ((short)(real_data[17] | (real_data[18]<<8))) / 10000.0;	//w
+//	truth_data[6] = ((short)(real_data[13] | (real_data[14]<<8))) / 10000.0;	//x
+//	truth_data[7] = ((short)(real_data[15] | (real_data[16]<<8))) / 10000.0;	//y
+//	truth_data[8] = ((short)(real_data[17] | (real_data[18]<<8))) / 10000.0;	//z
+//	truth_data[9] = ((short)(real_data[19] | (real_data[20]<<8))) / 1000.0;	//acc_x
+//	truth_data[10] = ((short)(real_data[21] | (real_data[22]<<8))) / 1000.0; //y
+//	truth_data[11] = ((short)(real_data[23] | (real_data[24]<<8))) / 1000.0; //z
 }
 
 int Data_Check(uint8_t *buff)
 {
-	int flag = 0; //0£ºÐ£ÑéÎ´Í¨¹ý 1£ºÐ£ÑéÍ¨¹ý
+	int flag = 0; //0ï¿½ï¿½Ð£ï¿½ï¿½Î´Í¨ï¿½ï¿½ 1ï¿½ï¿½Ð£ï¿½ï¿½Í¨ï¿½ï¿½
 	uint16_t crc = buff[DATA_FRAME_LEN-4] | (buff[DATA_FRAME_LEN-3]<<8);
 	uint16_t sum_crc = 0x00;
-	for(int i = 1; i < DATA_FRAME_LEN - 4; i++) //Ð£Ñé»úÖÆ£º²»Ëã°üÍ·£¬°üÎ²ºÍÐ£ÑéÎ»
+	for(int i = 1; i < DATA_FRAME_LEN - 4; i++) //Ð£ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½Ð£ï¿½ï¿½Î»
 	{
 		sum_crc += buff[i];
 	}
@@ -144,12 +162,14 @@ void get_angle_init(float* init_matix,float* matrix,DataInit_HandleTypedf* D_i){
 	}
 }
 
+
 void quat2Rotation(float* Td, float* Rm,float* angle, float* angle_init){
-	float norm = sqrt(Td[2] * Td[2] +Td[3] * Td[3]  + Td[4] * Td[4]  + Td[5] * Td[5] );
-	float w = Td[2]/ norm;
-	float x = Td[3]/ norm;
-	float y = Td[4]/ norm;
-	float z = Td[5]/ norm;
+	int i = 5;
+	float norm = sqrt(Td[i] * Td[i] +Td[i+1] * Td[i+1]  + Td[i+2] * Td[i+2]  + Td[i+3] * Td[i+3] );
+	float w = Td[i]/ norm;
+	float x = Td[i+1]/ norm;
+	float y = Td[i+2]/ norm;
+	float z = Td[i+3]/ norm;
 
 	float xx = x * x;
 	float xy = x * y;
@@ -176,7 +196,7 @@ void quat2Rotation(float* Td, float* Rm,float* angle, float* angle_init){
 	Rm[8] = 1 - 2 * (xx + yy);
 	
 	for(int i= 0; i < 9; i++){
-		angle[i] = acosf(Rm[i]) - angle_init[i];
+		angle[i] = acosf(Rm[i]);
 	}
 }
 

@@ -58,7 +58,7 @@ void update_AdmittanceController(AdmittanceController* ctrl, joint_control* join
 void Admittance_Run(AdmittanceController* ctrl, joint_control* joint,T external_force);
 
 void Admittance2joint(AdmittanceController* ctrl, joint_control* joint);
-void Admittance_pc_set(AdmittanceController* ctrl,motor_parameter_typedef *mp);
+void Admittance_pc_set(AdmittanceController* ctrl,motor_parameter_typedef *mp, joint_control* joint);
 
 T ExternalForce_Set(AdmittanceController* ctrl, T pos);
 #endif

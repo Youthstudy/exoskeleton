@@ -19,8 +19,8 @@ typedef struct {
 void Cqueue_Init(RouteQ* q);
 void Cqueue_push(RouteQ* q, uint8_t data);
 int Cqueue_empty(RouteQ *q);
-void Cqueue_pop(RouteQ* q);
-uint8_t Cqueue_head(RouteQ* q);
+int Cqueue_pop(RouteQ* q,uint8_t *data);
+int Cqueue_isFull(RouteQ *q);
 
 #endif
 

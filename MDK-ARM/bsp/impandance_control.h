@@ -4,6 +4,7 @@
 #include "control.h"
 typedef float T;
 
+#define MAX_T 0.5f
 
 typedef struct{
 	// -- IMPANDANCE PARAMETER --//
@@ -13,6 +14,10 @@ typedef struct{
 	int frequence;
 	T pos_init;
 	
+	T time_end;
+	
+	
+	int enable;
 	// -- CALLBACK -- //
 	T current_pos;
 	T current_v;
@@ -37,9 +42,9 @@ void ImpedanceCtrl_Init(ImpandanceController* ctrl,
 void update_ImpandanceController(ImpandanceController* ctrl, joint_control* joint);
 void Impedance_Set(ImpandanceController* ctrl,T M, T B,T K);
 void Impedance2joint(ImpandanceController* ctrl, joint_control* joint);
-void ImpedanceCtrl_Run(ImpandanceController* ctrl, joint_control* joint, T pos_end, T v_desire);
-void ImpedanceCtrl_Compute(ImpandanceController* ctrl, joint_control* joint, T pos_desire, T v_desire);
+void ImpedanceCtrl_Run(ImpandanceController* ctrl, joint_control* joint,T pos_desire);
+void ImpedanceCtrl_Compute(ImpandanceController* ctrl, joint_control* joint, T pos_desire);
 
-
+void Impedance_pc_set(ImpandanceController* ctrl,motor_parameter_typedef *mp);
 #endif
 
