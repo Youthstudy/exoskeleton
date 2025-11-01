@@ -120,7 +120,7 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim3);
 	
   ChangeMotorID(&TxHeader[0],1,2);     //修改电机ID
-	EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
+	EnterMotorMode(&TxHeader[0], 2);    //启动电机模块
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
 //	EnterMotorZero(&TxHeader[0], 1); 
 	

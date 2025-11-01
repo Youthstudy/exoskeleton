@@ -13,6 +13,8 @@
                 "f:\\3.biye\\1_code\\exoskeleton\\Middlewares\\Third_Party\\FreeRTOS\\Source\\CMSIS_RTOS",
                 "f:\\3.biye\\1_code\\exoskeleton\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\RVDS\\ARM_CM4F",
                 "f:\\3.biye\\1_code\\exoskeleton\\Middlewares\\Third_Party\\FreeRTOS",
+                "D:\\keil5\\ARM\\ARMCC\\include",
+                "D:\\keil5\\ARM\\ARMCC\\include\\rw",
                 "f:\\3.biye\\1_code\\exoskeleton\\MDK-ARM",
                 "f:\\3.biye\\1_code\\exoskeleton\\Core\\Src",
                 "f:\\3.biye\\1_code\\exoskeleton\\Drivers\\STM32F4xx_HAL_Driver\\Src",
