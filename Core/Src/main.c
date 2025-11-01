@@ -20,6 +20,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "can.h"
+#include "crc.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -27,6 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "admittance_control.h"
+#include "impandance_control.h"
 
 //#include "usbd_cdc_if.c"
 
@@ -101,49 +103,40 @@ int main(void)
   MX_CAN1_Init();
   MX_USART6_UART_Init();
   MX_TIM2_Init();
-  MX_UART7_Init();
-  MX_UART8_Init();
-  MX_USART3_UART_Init();
   MX_TIM3_Init();
-  MX_USART2_UART_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
+	
+	joint_init(&joint[0]);
+	
+	// 初始化
+	int j = 0;
+	ImpedanceCtrl_Init(&Ictrl[0], 1, 5.4690, 21.4961, joint[0].p_init, 1000);
+	
 	
 	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE); // 清楚标志位
 	HAL_TIM_Base_Start_IT(&htim2);						// 启动定时器的中断
 	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
 	HAL_TIM_Base_Start_IT(&htim3);
 	
-	
-
-  EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
+  ChangeMotorID(&TxHeader[0],1,2);     //修改电机ID
+	EnterMotorMode(&TxHeader[0], 1);    //启动电机模块
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
 //	EnterMotorZero(&TxHeader[0], 1); 
 	
   // 临时电机参数设置
+	
   HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
-	
 
 
-//	IMU设置打开四元数，线性加速度
-//  HAL_UART_Receive_IT(&huart2, ImuData[0].RecieveBuffer, BUFFER_LEN);
-//	HAL_UART_Receive_IT(&huart3, ImuData[1].RecieveBuffer, BUFFER_LEN);
-  HAL_UART_Receive_IT(&huart7, ImuData[0].RecieveBuffer, BUFFER_LEN);
-//  HAL_UART_Receive_IT(&huart8, ImuData[3].RecieveBuffer, BUFFER_LEN);
 
-	joint_init(&joint[0]);
-	HAL_Delay(100);
-	
-	// 初始化
-	int j = 0;
-	
-	
   /* USER CODE END 2 */
 
-//  /* Call init function for freertos objects (in freertos.c) */
-//  MX_FREERTOS_Init();
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
 
-//  /* Start scheduler */
-//  osKernelStart();
+  /* Start scheduler */
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -157,33 +150,23 @@ int main(void)
 			if(j == 0){
 				for(int i = 0; i < MOTOR; i++){
 					if(joint[i].p_init != 0){
-						Admittance_init(&ACtrl[i],&joint[i],0.01,0.8318,100);
+						Admittance_init(&ACtrl[i], &joint[i], 1.0,20.3155, 1000);
+						ImpedanceCtrl_Init(&Ictrl[i], 1, 5.4690, 21.4961, joint[i].p_init, 1000);
 						j ++;
 					}
 				}
-			} 
-			pc_debug();
+			}
 			
+			pc_debug();
+
 			for(int i = 0; i < 4; i ++){
 				Receive(&ImuData[i]);
 			}
-//      key_count = KEY_Read();
-//      if (key_count == 1)
-//        {
-//          LED_mode(key_count);
-
-
-//      CAN1_Send_Msg(&TxHeader[0], 1);
-//      joint_set(&joint[0], 0, 0, 0, 5, 1);
-//      pack_cmd(&TxHeader[0], joint[0]);
-//			
-//        }
-//      else
-//        {
-//					LED_mode(key_count);
-
-//        }
-      HAL_Delay(10);
+			
+			if(KEY_Read() == 1){
+				ExitMotorMode();
+			}
+			HAL_Delay(10);
     }
   /* USER CODE END 3 */
 }
@@ -236,8 +219,9 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 void pc_debug(void){
-	Admittance_pc_set(&ACtrl[0],&motor_parameter);
-
+	Admittance_pc_set(&ACtrl[0],&motor_parameter,&joint[0]);
+// Impedance_pc_set(&Ictrl[0],&motor_parameter);
+	
 }
 
 /* USER CODE END 4 */
@@ -254,10 +238,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 	if (htim->Instance == TIM6) {
+//			printf("%f,%f,%f\r\n",joint[0].filt_res[0],joint[0].filt_res[1],joint[0].filt_res[2]);
 			for(int i = 0; i < 1; i++){
-				Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
-				
+				// 
+				if(joint[i].moveflag == 0){ 
+					Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
+
+				}else if(joint[i].moveflag == 1){
+//					ImpedanceCtrl_Run(&Ictrl[i],&joint[i],0);
+					joint_set(&joint[i],0,0,0,10,5);
+				}
 			}
+//			printf("%f\r\n",joint[0].t_ff);
 			if(motor_parameter.Force_time > 0){
 				motor_parameter.Force_time -= 0.001f;
 			}
@@ -267,11 +259,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			pack_cmd(&TxHeader[i], joint[i]);
 			CAN1_Send_Msg(&TxHeader[i], i+1);
 		}
-	}else if(htim->Instance == TIM3){
-		
+	}else if(htim->Instance == TIM3){	
 		//	joint_pc_set(&joint[0],&motor_parameter);
-
-
 	}
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {

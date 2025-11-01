@@ -44,7 +44,7 @@ void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint){
      
      /// limit data to be within bounds ///
 	float p_des = fminf(fmaxf(P_MIN, joint.p_des), P_MAX);                    
-	float v_des = fminf(fmaxf(V_MIN, joint.v_des), V_MAX);//将角速度限制在有效的范围内
+	float v_des = fminf(fmaxf(V_MIN, joint.v_des), V_MAX);
 	float kp = fminf(fmaxf(KP_MIN, joint.kp), KP_MAX);
 	float kd = fminf(fmaxf(KD_MIN, joint.kd), KD_MAX);
 	float t_ff = fminf(fmaxf(T_MIN, joint.t_ff), T_MAX);
@@ -102,20 +102,20 @@ void unpack_reply(float ret[3],CAN_RxPacketTypeDef *msg)
 void CAN1_Send_Msg(CAN_TxPacketTypeDef *TxMessage, uint8_t id)
 {
 	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;	 // 设置扩展标示符（29位）
-  TxMessage->hdr.IDE=0;		  // 使用扩展标识符
-  TxMessage->hdr.RTR=0;		  // 消息类型为数据帧，一帧8位
+	TxMessage->hdr.ExtId = 0x00;	 // ??????????????29λ??
+  TxMessage->hdr.IDE=0;		  // ???????????
+  TxMessage->hdr.RTR=0;		  // ?????????????????8λ
   TxMessage->hdr.DLC = 8;		
 	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, TxMessage->Data, &TxMessage->mailbox) ;	
 }
 
 
 void CAN_TxheaderInit(CAN_TxHeaderTypeDef *hdr, uint8_t id,uint8_t len){
-	hdr->StdId = id;	 // 标准标识符为0
-  hdr->ExtId = 0x00;	 // 设置扩展标示符（29位）
-  hdr->IDE=0;		  // 使用扩展标识符
-  hdr->RTR=0;		  // 消息类型为数据帧，一帧8位
-  hdr->DLC = len;							 // 发送8个字节
+	hdr->StdId = id;	 // ?????????0
+  hdr->ExtId = 0x00;	 // ??????????????29λ??
+  hdr->IDE=0;		  // ???????????
+  hdr->RTR=0;		  // ?????????????????8λ
+  hdr->DLC = len;							 // ????8?????
 }
 
 
@@ -124,9 +124,9 @@ void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id)
 	//  CanTxMsg TxMessage;
 
 	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;	 // 设置扩展标示符（29位）
-  TxMessage->hdr.IDE=0;		  // 使用扩展标识符
-  TxMessage->hdr.RTR=0;		  // 消息类型为数据帧，一帧8位
+	TxMessage->hdr.ExtId = 0x00;	 // ??????????????29λ??
+  TxMessage->hdr.IDE=0;		  // ???????????
+  TxMessage->hdr.RTR=0;		  // ?????????????????8λ
   TxMessage->hdr.DLC = 8;		
 	uint8_t qidong[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFC};
 	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, qidong, &TxMessage->mailbox);
@@ -137,12 +137,42 @@ void EnterMotorZero(CAN_TxPacketTypeDef *TxMessage,uint8_t id)
 	//  CanTxMsg TxMessage;
 
 	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;	 // 设置扩展标示符（29位）
-  TxMessage->hdr.IDE=0;		  // 使用扩展标识符
-  TxMessage->hdr.RTR=0;		  // 消息类型为数据帧，一帧8位
-  TxMessage->hdr.DLC = 8;		
+	TxMessage->hdr.ExtId = 0x00;
+	TxMessage->hdr.IDE=0;
+	TxMessage->hdr.RTR=0;
+	TxMessage->hdr.DLC = 8;		
 	uint8_t qidong[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xF1,0x00};
 	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, qidong, &TxMessage->mailbox);
 
+}
+
+void ExitMotorMode(void)
+{
+	
+	uint8_t exit[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFC};
+
+	 for(int i = 0; i < 2 ; i++)
+	  {
+		  for (int j=0; j < 11000; j++){};
+			TxHeader[i].hdr.StdId = i + 1;
+			TxHeader[i].hdr.ExtId = 0x00;	 // ??????????????29λ??
+			TxHeader[i].hdr.IDE = 0;		  // ???????????
+			TxHeader[i].hdr.RTR = 0;		  // ?????????????????8λ
+			TxHeader[i].hdr.DLC = 8;
+			HAL_CAN_AddTxMessage(&hcan1, &TxHeader[i].hdr, exit, &TxHeader[i].mailbox);
+    }
+	
+}
+
+void ChangeMotorID(CAN_TxPacketTypeDef *TxMessage,uint8_t old_id,uint8_t new_id)
+{
+	//  CanTxMsg TxMessage;
+	TxMessage->hdr.StdId = old_id;
+	TxMessage->hdr.ExtId = 0x00;	
+  	TxMessage->hdr.IDE=0;		 
+  	TxMessage->hdr.RTR=0;		  
+  	TxMessage->hdr.DLC = 8;		
+	uint8_t change_id[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xF1,new_id};
+	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, change_id, &TxMessage->mailbox);
 }
 

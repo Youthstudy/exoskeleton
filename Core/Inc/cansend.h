@@ -5,7 +5,7 @@
 #include "stm32f4xx_hal_can.h"
 #include "control.h"
 
-#define MOTOR 2  // 电机数量
+#define MOTOR 2 
 
 #define PI 3.1415926f
 #define P_MIN -4*PI   //0
@@ -18,7 +18,6 @@
 #define KD_MAX 100.0f
 #define T_MIN -15.0f    //-18   18
 #define T_MAX 15.0f
-
 
 typedef struct
 {
@@ -46,6 +45,11 @@ void CAN_TxheaderInit(CAN_TxHeaderTypeDef *hdr, uint8_t id,uint8_t len);
 void CAN1_Send_Msg(CAN_TxPacketTypeDef *TxMessage, uint8_t id);
 void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
 
+void ExitMotorMode(void);
 void EnterMotorZero(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
+void ChangeMotorID(CAN_TxPacketTypeDef *TxMessage,uint8_t old_id,uint8_t new_id);
+
 #endif
+
+
 

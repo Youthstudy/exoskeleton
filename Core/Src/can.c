@@ -167,19 +167,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *canHandle)
 							for(int j = 0; j < 3; j++){
 								joint[0].filt_res[j] = Kalman_Predict(&joint[0].kfilter[j],joint[0].ret[j]);
 							}
-              if(i < 50)
-                {
-                  i++;
-                  sum += joint[0].ret[0];
-                }
-              else if(i == 50)
-                {
-									i++;
-                  joint[0].p_init = sum / 50.0f;
-                }
               break;
             case 2:
-
+              unpack_reply(joint[1].ret,&packet);
+							for(int j = 0; j < 3; j++){
+								joint[1].filt_res[j] = Kalman_Predict(&joint[1].kfilter[j],joint[1].ret[j]);
+							}
               break;
             default:
               break;

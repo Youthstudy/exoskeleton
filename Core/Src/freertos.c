@@ -27,6 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "usart.h"
 #include "my_task.h"
+#include "TCPsend.h"
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,8 +110,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-	osThreadDef(Acontrol, vControlOutputTask, osPriorityNormal, 0, 128);
-	controlTaskHandle = osThreadCreate(osThread(Acontrol), NULL);
+	// osThreadDef(Acontrol, vControlOutputTask, osPriorityNormal, 0, 128);
+	// controlTaskHandle = osThreadCreate(osThread(Acontrol), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -127,6 +129,10 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		uint8_t buffer[128] = {0};
+		joint_pack(&joint[0], buffer, 0);
+    joint_pack(&joint[1], buffer, 6 * sizeof(float));
+		sendData(buffer);
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
