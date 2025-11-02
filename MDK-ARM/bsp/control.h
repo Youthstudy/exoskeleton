@@ -19,6 +19,8 @@ typedef struct
 	int status;
 	
 	int moveflag; // 动作标志
+
+	uint8_t senddata[8];
 }joint_control;
 
 // pc 输入测试结构体
@@ -28,11 +30,11 @@ typedef struct
 typedef struct
 {
 	uint8_t RecieveBuffer[1];
-  uint8_t step;
-  uint8_t cnt;
+	uint8_t step;
+	uint8_t cnt;
 	char str[PC_BUFFER];
 	float buff[PC_RECIEVE_LEN];
-  float p_des, v_des, kp, kd, t_ff;
+	float p_des, v_des, kp, kd, t_ff;
 	float Force_time;
 } motor_parameter_typedef;
 

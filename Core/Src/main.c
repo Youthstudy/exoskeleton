@@ -105,6 +105,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_CRC_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
 	
 	joint_init(&joint[0]);
@@ -118,14 +119,12 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim2);						// 启动定时器的中断
 	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
 	HAL_TIM_Base_Start_IT(&htim3);
-	
-  ChangeMotorID(&TxHeader[0],1,2);     //修改电机ID
-	EnterMotorMode(&TxHeader[0], 2);    //启动电机模块
+
+  EnterMotorMode(1);
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
-//	EnterMotorZero(&TxHeader[0], 1); 
-	
+  HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
+
   // 临时电机参数设置
-	
   HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
 
 
@@ -143,7 +142,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
     {
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -158,14 +156,6 @@ int main(void)
 			}
 			
 			pc_debug();
-
-			for(int i = 0; i < 4; i ++){
-				Receive(&ImuData[i]);
-			}
-			
-			if(KEY_Read() == 1){
-				ExitMotorMode();
-			}
 			HAL_Delay(10);
     }
   /* USER CODE END 3 */
@@ -254,11 +244,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				motor_parameter.Force_time -= 0.001f;
 			}
 			ACtrl[0].Force = motor_parameter.Force_time > 0? ACtrl[0].Force : 0.0f ;
+      for(int i = 0; i < MOTOR; i++)
+      {
+        pack_cmd(joint[i].senddata, joint[i]);
+      }
 
-		for(int i = 0; i < 2; i ++){
-			pack_cmd(&TxHeader[i], joint[i]);
-			CAN1_Send_Msg(&TxHeader[i], i+1);
-		}
+      CAN_Send_Msg(&hcan1,joint[0].senddata,1);
+      CAN_Send_Msg(&hcan2,joint[1].senddata,1);
 	}else if(htim->Instance == TIM3){	
 		//	joint_pc_set(&joint[0],&motor_parameter);
 	}

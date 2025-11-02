@@ -33,21 +33,19 @@ typedef struct
 	float ret[3];
 }CAN_RxPacketTypeDef;
 
-extern CAN_TxPacketTypeDef TxHeader[MOTOR];
-
 int float_to_uint(float x, float x_min, float x_max, int bits);
 double uint_to_double(int x_int, float x_min, float x_max, int bits);
 float fmaxf(float x, float y);
 float fminf(float x, float y);
-void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint);
-void unpack_reply(float ret[3],CAN_RxPacketTypeDef *msg);
-void CAN_TxheaderInit(CAN_TxHeaderTypeDef *hdr, uint8_t id,uint8_t len);
-void CAN1_Send_Msg(CAN_TxPacketTypeDef *TxMessage, uint8_t id);
-void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
 
-void ExitMotorMode(void);
-void EnterMotorZero(CAN_TxPacketTypeDef *TxMessage,uint8_t id);
+void pack_cmd(uint8_t* data, joint_control joint);
+void unpack_reply(float ret[3],CAN_RxPacketTypeDef *msg);
+
+void CAN_Send_Msg(CAN_HandleTypeDef *hcan,uint8_t *data, uint8_t id);
+void EnterMotorMode(uint8_t id);
+
 void ChangeMotorID(CAN_TxPacketTypeDef *TxMessage,uint8_t old_id,uint8_t new_id);
+void ResetMotorID(CAN_HandleTypeDef *hcan,uint8_t id);
 
 #endif
 

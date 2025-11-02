@@ -1,10 +1,6 @@
 #include "cansend.h"
 #include "control.h"
 
-CAN_TxPacketTypeDef TxHeader[MOTOR];
-
-
-
 int float_to_uint(float x, float x_min, float x_max, int bits)
 {
     /// Converts a float to an unsigned int, given range and number of bits ///
@@ -40,7 +36,7 @@ float fminf(float x, float y){
 /// 5: [kd[11-4]] 
 /// 6: [kd[3-0], torque[11-8]]
 /// 7: [torque[7-0]]
-void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint){
+void pack_cmd(uint8_t* data, joint_control joint){
      
      /// limit data to be within bounds ///
 	float p_des = fminf(fmaxf(P_MIN, joint.p_des), P_MAX);                    
@@ -57,15 +53,14 @@ void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint){
 	uint16_t t_cmd = float_to_uint(t_ff, T_MIN, T_MAX, 12);
 	/// pack ints into the can buffer ///
 
-	msg->Data[0] = p_cmd>>8;
-	msg->Data[1] = p_cmd&0xFF;
-	msg->Data[2] = v_cmd>>4;
-	msg->Data[3] = ((v_cmd&0xF)<<4)|(kp_cmd>>8);
-	msg->Data[4] = kp_cmd&0xFF;
-	msg->Data[5] = kd_cmd>>4;
-
-	msg->Data[6] = 0x00|(t_cmd>>8);
-	msg->Data[7] = t_cmd&0xFF;
+	data[0] = p_cmd>>8;
+	data[1] = p_cmd&0xFF;
+	data[2] = v_cmd>>4;
+	data[3] = ((v_cmd&0xF)<<4)|(kp_cmd>>8);
+	data[4] = kp_cmd&0xFF;
+	data[5] = kd_cmd>>4; 
+	data[6] = 0x00|(t_cmd>>8);
+	data[7] = t_cmd&0xFF;
 }
 
 
@@ -80,8 +75,6 @@ void pack_cmd(CAN_TxPacketTypeDef* msg, joint_control joint){
 /// 2: [velocity[11-4]]
 /// 3: [velocity[3-0], current[11-8]]
 /// 4: [current[7-0]]
-		 
-
 void unpack_reply(float ret[3],CAN_RxPacketTypeDef *msg)
 {
 
@@ -99,80 +92,34 @@ void unpack_reply(float ret[3],CAN_RxPacketTypeDef *msg)
 	ret[2] = t;
 }
 
-void CAN1_Send_Msg(CAN_TxPacketTypeDef *TxMessage, uint8_t id)
+void CAN_Send_Msg(CAN_HandleTypeDef *hcan,uint8_t *data, uint8_t id)
 {
-	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;	 // ??????????????29¦Ë??
-  TxMessage->hdr.IDE=0;		  // ???????????
-  TxMessage->hdr.RTR=0;		  // ?????????????????8¦Ë
-  TxMessage->hdr.DLC = 8;		
-	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, TxMessage->Data, &TxMessage->mailbox) ;	
+	CAN_TxPacketTypeDef TxMessage;
+	TxMessage.hdr.StdId = id;
+	TxMessage.hdr.ExtId = 0x00;	 
+	TxMessage.hdr.IDE=0;
+	TxMessage.hdr.RTR=0;
+	TxMessage.hdr.DLC = 8;
+	memcpy(TxMessage.Data, data, 8);
+	HAL_CAN_AddTxMessage(hcan, &TxMessage.hdr, TxMessage.Data, &TxMessage.mailbox) ;	
 }
 
-
-void CAN_TxheaderInit(CAN_TxHeaderTypeDef *hdr, uint8_t id,uint8_t len){
-	hdr->StdId = id;	 // ?????????0
-  hdr->ExtId = 0x00;	 // ??????????????29¦Ë??
-  hdr->IDE=0;		  // ???????????
-  hdr->RTR=0;		  // ?????????????????8¦Ë
-  hdr->DLC = len;							 // ????8?????
-}
-
-
-void EnterMotorMode(CAN_TxPacketTypeDef *TxMessage,uint8_t id)
-{
-	//  CanTxMsg TxMessage;
-
-	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;	 // ??????????????29¦Ë??
-  TxMessage->hdr.IDE=0;		  // ???????????
-  TxMessage->hdr.RTR=0;		  // ?????????????????8¦Ë
-  TxMessage->hdr.DLC = 8;		
+void EnterMotorMode(uint8_t id)
+{	
 	uint8_t qidong[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFC};
-	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, qidong, &TxMessage->mailbox);
+	CAN_Send_Msg(&hcan1, qidong, id);
+	CAN_Send_Msg(&hcan2, qidong, id);
 }
 
-void EnterMotorZero(CAN_TxPacketTypeDef *TxMessage,uint8_t id)
+void SetZeroPosition(uint8_t id)
 {
-	//  CanTxMsg TxMessage;
-
-	TxMessage->hdr.StdId = id;
-	TxMessage->hdr.ExtId = 0x00;
-	TxMessage->hdr.IDE=0;
-	TxMessage->hdr.RTR=0;
-	TxMessage->hdr.DLC = 8;		
-	uint8_t qidong[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xF1,0x00};
-	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, qidong, &TxMessage->mailbox);
-
+	uint8_t setzero[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xF1,0x00};
+	CAN_Send_Msg(&hcan1, setzero, id);
+	CAN_Send_Msg(&hcan2, setzero, id);
 }
 
-void ExitMotorMode(void)
+void ResetMotorID(CAN_HandleTypeDef *hcan,uint8_t id)
 {
-	
-	uint8_t exit[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFC};
-
-	 for(int i = 0; i < 2 ; i++)
-	  {
-		  for (int j=0; j < 11000; j++){};
-			TxHeader[i].hdr.StdId = i + 1;
-			TxHeader[i].hdr.ExtId = 0x00;	 // ??????????????29¦Ë??
-			TxHeader[i].hdr.IDE = 0;		  // ???????????
-			TxHeader[i].hdr.RTR = 0;		  // ?????????????????8¦Ë
-			TxHeader[i].hdr.DLC = 8;
-			HAL_CAN_AddTxMessage(&hcan1, &TxHeader[i].hdr, exit, &TxHeader[i].mailbox);
-    }
-	
+	uint8_t change_id[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFD};
+	CAN_Send_Msg(hcan, change_id, id);
 }
-
-void ChangeMotorID(CAN_TxPacketTypeDef *TxMessage,uint8_t old_id,uint8_t new_id)
-{
-	//  CanTxMsg TxMessage;
-	TxMessage->hdr.StdId = old_id;
-	TxMessage->hdr.ExtId = 0x00;	
-  	TxMessage->hdr.IDE=0;		 
-  	TxMessage->hdr.RTR=0;		  
-  	TxMessage->hdr.DLC = 8;		
-	uint8_t change_id[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xF1,new_id};
-	HAL_CAN_AddTxMessage(&hcan1, &TxMessage->hdr, change_id, &TxMessage->mailbox);
-}
-

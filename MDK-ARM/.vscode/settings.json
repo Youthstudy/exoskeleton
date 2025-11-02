@@ -1,3 +1,8 @@
 {
-    "files.encoding": "gbk"
+    "files.encoding": "gbk",
+    "files.associations": {
+        "*.cpp": "cpp",
+        "cansend.h": "c",
+        "control.h": "c"
+    }
 }
