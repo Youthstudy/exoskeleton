@@ -233,8 +233,8 @@ void my_can_filter_init_recv_all(CAN_HandleTypeDef* _hcan)
 {
   //can1 &can2 use same filter config
   CAN_FilterTypeDef		CAN_FilterConfigStructure;
-
-  CAN_FilterConfigStructure.FilterBank = 0;
+	
+  CAN_FilterConfigStructure.FilterBank = _hcan->Instance == hcan1.Instance?0:14;
   CAN_FilterConfigStructure.FilterMode = CAN_FILTERMODE_IDMASK;
   CAN_FilterConfigStructure.FilterScale = CAN_FILTERSCALE_32BIT;
   CAN_FilterConfigStructure.FilterIdHigh = 0x0000;

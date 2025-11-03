@@ -48,6 +48,7 @@ void MX_CAN2_Init(void);
 /* USER CODE BEGIN Prototypes */
 void CAN1_Filter_Bank(void);
 void my_can_filter_init_recv_all(CAN_HandleTypeDef* _hcan);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
