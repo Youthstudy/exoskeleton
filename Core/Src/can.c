@@ -271,9 +271,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *canHandle)
               break;
             }
         }
-      HAL_CAN_ActivateNotification(canHandle, CAN_IT_RX_FIFO0_MSG_PENDING);
-    }
-    else if (canHandle->Instance == hcan2.Instance)
+    }else if (canHandle->Instance == hcan2.Instance)
     {
       if (HAL_CAN_GetRxMessage(canHandle, CAN_RX_FIFO0, &packet.hdr, packet.Data) == HAL_OK)
       {
@@ -281,19 +279,19 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *canHandle)
         switch (id)
         {
         case 1:
-          unpack_reply(joint[0].ret, &packet);
+          unpack_reply(joint[1].ret, &packet);
           for (int j = 0; j < 3; j++)
           {
-            joint[0].filt_res[j] = Kalman_Predict(&joint[0].kfilter[j], joint[0].ret[j]);
+            joint[1].filt_res[j] = Kalman_Predict(&joint[1].kfilter[j], joint[1].ret[j]);
           }
           break;
         default:
           break;
         }
       }
-      HAL_CAN_ActivateNotification(canHandle, CAN_IT_RX_FIFO0_MSG_PENDING);
+      
     }
-    
+    HAL_CAN_ActivateNotification(canHandle, CAN_IT_RX_FIFO0_MSG_PENDING);
 }
 
 
