@@ -126,14 +126,17 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+	const TickType_t xFrequency = pdMS_TO_TICKS(5); // ??100ms
+	TickType_t xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
   for(;;)
   {
 		uint8_t buffer[128] = {0};
-		joint_pack(&joint[0], buffer, 0);
-    joint_pack(&joint[1], buffer, 6 * sizeof(float));
-		sendData(buffer);
-    osDelay(1);
+		uint8_t n = 0;
+		n = joint_pack(&joint[0], buffer, n);
+    n = joint_pack(&joint[1], buffer, n);
+		sendData(buffer,n);
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
   /* USER CODE END StartDefaultTask */
 }

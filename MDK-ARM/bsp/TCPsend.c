@@ -18,21 +18,14 @@ void UART_SendByte(uint8_t b){
 	return ;
 }
 
-void sendFrame(Frame* frame) {
-		UART_SendByte(0x3A);         
-		UART_SendByte(frame->len);
-		for(int i=0;i<frame->len;i++) UART_SendByte(frame->data[i]);
-//		frame->checksum = crc32_cal(frame->data,frame->len);	
-//    UART_SendByte(frame->checksum);
-		UART_SendByte(0x0D); 
-		UART_SendByte(0x0A); 
-}
 
-void sendData(uint8_t* data) {
-    Frame frame;
-    frame.len = sizeof(data)/sizeof(data[0]);
-    memcpy(frame.data, data, frame.len);
-		sendFrame(&frame);
+void sendData(uint8_t* data,uint8_t len) {
+    UART_SendByte(0x3A);   
+
+    UART_SendByte(len);
+    for(int i=0;i<len;i++) UART_SendByte(data[i]);
+    UART_SendByte(0x0D); 
+    UART_SendByte(0x0A);
 }
 
 

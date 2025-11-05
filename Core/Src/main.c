@@ -109,6 +109,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	
 	joint_init(&joint[0]);
+	joint_init(&joint[1]);
 	
 	// ≥ı ºªØ
 	int j = 0;

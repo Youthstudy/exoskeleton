@@ -54,7 +54,7 @@ int joint_pack(const joint_control *joint, uint8_t *buffer, int offset);
 
 void UART_SendByte(uint8_t b);
 void sendFrame(Frame* frame) ;
-void sendData(uint8_t* data)  ;
+void sendData(uint8_t* data,uint8_t len);
 uint32_t crc32_cal(uint32_t *data, uint32_t len);
 // 打包发送
 
