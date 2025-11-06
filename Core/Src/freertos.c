@@ -137,6 +137,7 @@ void StartDefaultTask(void const * argument)
     n = joint_pack(&joint[1], buffer, n);
 		sendData(buffer,n);
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    
   }
   /* USER CODE END StartDefaultTask */
 }
