@@ -116,10 +116,10 @@ int main(void)
 	ImpedanceCtrl_Init(&Ictrl[0], 1, 5.4690, 21.4961, joint[0].p_init, 1000);
 	
 	
-	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE); // 清楚标志位
-	HAL_TIM_Base_Start_IT(&htim2);						// 启动定时器的中断
-	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
-	HAL_TIM_Base_Start_IT(&htim3);
+//	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE); // 清楚标志位
+//	HAL_TIM_Base_Start_IT(&htim2);						// 启动定时器的中断
+//	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
+//	HAL_TIM_Base_Start_IT(&htim3);
 
   EnterMotorMode(1);
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
