@@ -8,7 +8,6 @@ void joint_init(joint_control *joint){
 	joint->kp = 15;
 	joint->kd = 10;
 	joint->p_des = 0;
-	joint->p_init = 1.4;
 	memset(joint->ret,0,sizeof(joint->ret));
 	joint->t_ff = 0;
 	joint->v_des = 0;
@@ -17,6 +16,7 @@ void joint_init(joint_control *joint){
 	for(int i = 0 ; i < 3; i++){
 	FILT_init(&joint->filt[i]);
 	Kalman_Init(&joint->kfilter[i],0.02,0.001,0.5);
+	joint->p_init = joint->ret[0];
 	}
 }
 

@@ -21,7 +21,7 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "crc.h"
-#include "tim.h"
+#include "rtc.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -84,10 +84,6 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-//  int key_count = 0;
-
-
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -102,10 +98,9 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_USART6_UART_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
   MX_CRC_Init();
   MX_CAN2_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 	
 	joint_init(&joint[0]);
@@ -113,22 +108,21 @@ int main(void)
 	
 	// 初始化
 	int j = 0;
-	ImpedanceCtrl_Init(&Ictrl[0], 1, 5.4690, 21.4961, joint[0].p_init, 1000);
 	
-	
-//	__HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE); // 清楚标志位
-//	HAL_TIM_Base_Start_IT(&htim2);						// 启动定时器的中断
-//	__HAL_TIM_CLEAR_IT(&htim3, TIM_IT_UPDATE);
-//	HAL_TIM_Base_Start_IT(&htim3);
 
-  EnterMotorMode(1);
+
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
   HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
+	
+	
+  EnterMotorMode(1);
 
   // 临时电机参数设置
   HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
-
-
+	for(int i = 0; i < 2; i++){
+		Admittance_init(&ACtrl[i], &joint[i], 10.0,10, 0.1);
+	}
+	
 
   /* USER CODE END 2 */
 
@@ -149,7 +143,7 @@ int main(void)
 			if(j == 0){
 				for(int i = 0; i < MOTOR; i++){
 					if(joint[i].p_init != 0){
-						Admittance_init(&ACtrl[i], &joint[i], 1.0,20.3155, 1000);
+						
 						ImpedanceCtrl_Init(&Ictrl[i], 1, 5.4690, 21.4961, joint[i].p_init, 1000);
 						j ++;
 					}
@@ -179,8 +173,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 6;
@@ -216,53 +211,6 @@ void pc_debug(void){
 }
 
 /* USER CODE END 4 */
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-	if (htim->Instance == TIM6) {
-//			printf("%f,%f,%f\r\n",joint[0].filt_res[0],joint[0].filt_res[1],joint[0].filt_res[2]);
-			for(int i = 0; i < 1; i++){
-				// 
-				if(joint[i].moveflag == 0){ 
-					Admittance_Run(&ACtrl[i],&joint[i],ACtrl[i].Force);
-
-				}else if(joint[i].moveflag == 1){
-//					ImpedanceCtrl_Run(&Ictrl[i],&joint[i],0);
-					joint_set(&joint[i],0,0,0,10,5);
-				}
-			}
-//			printf("%f\r\n",joint[0].t_ff);
-			if(motor_parameter.Force_time > 0){
-				motor_parameter.Force_time -= 0.001f;
-			}
-			ACtrl[0].Force = motor_parameter.Force_time > 0? ACtrl[0].Force : 0.0f ;
-      for(int i = 0; i < MOTOR; i++)
-      {
-        pack_cmd(joint[i].senddata, joint[i]);
-      }
-
-      CAN_Send_Msg(&hcan1,joint[0].senddata,1);
-      CAN_Send_Msg(&hcan2,joint[1].senddata,1);
-	}else if(htim->Instance == TIM3){	
-		//	joint_pc_set(&joint[0],&motor_parameter);
-	}
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

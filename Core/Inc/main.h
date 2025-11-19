@@ -35,7 +35,7 @@ extern "C" {
 #include "calculate.h"
 #include "cansend.h"
 #include "control.h"
-	
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

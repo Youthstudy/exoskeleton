@@ -32,8 +32,8 @@ exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_e
 exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
-exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
-exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
+exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
 exoskeleton\cansend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 exoskeleton\cansend.o: ./bsp/RouteQ.h
 exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
@@ -45,3 +45,4 @@ exoskeleton\cansend.o: ./bsp/control.h
 exoskeleton\cansend.o: ./bsp/pid.h
 exoskeleton\cansend.o: ./bsp/filt.h
 exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\cansend.o: ../Core/Inc/can.h

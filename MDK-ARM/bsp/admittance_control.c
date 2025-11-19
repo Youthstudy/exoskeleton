@@ -3,11 +3,9 @@
 #include "filt.h"
 #include "string.h"
 
-// 0.01 0.8318 100
-
 AdmittanceController ACtrl[2];
 
-void Admittance_init(AdmittanceController* ac,joint_control* joint,T M_a,T D_a,T K_a_)
+void Admittance_init(AdmittanceController* ac,joint_control* joint,float M_a,float D_a,float K_a_)
 {
   ac->M_a_ = M_a;
   ac->D_a_ = D_a;
@@ -19,14 +17,15 @@ void Admittance_init(AdmittanceController* ac,joint_control* joint,T M_a,T D_a,T
   ac->lastV = joint->filt_res[1];
   ac->pos_cmd = joint->filt_res[0];
   ac->velocity_cmd = 0;
+  ac->delta_velocity = 0;
+  ac->delta_pos = 0;
   ac->Force = 0;
-  ac->time_end = -1;
   ac->AC_enable = 1;
   ac->start_flag = 1;
   FILT_init(&ac->filt);
 }
 
-void Admittance_set(AdmittanceController* ctrl, T M_a, T D_a,T K_a_)
+void Admittance_set(AdmittanceController* ctrl, float M_a, float D_a,float K_a_)
 {
   ctrl->M_a_ = M_a;
   ctrl->D_a_ = D_a;
@@ -36,75 +35,41 @@ void Admittance_set(AdmittanceController* ctrl, T M_a, T D_a,T K_a_)
 // 更改外力
 // 更改动力学模型
 // 模式切换
-void Admittance_Compute(AdmittanceController* ctrl, T external_force)
+
+// M_a * acc = F_ext - D_a * (x_dot - x_dot_0) - K_a * (x - x_0)
+// x0 为虚拟平衡位置，默认为人体直立时位置
+void Admittance_Compute(AdmittanceController* ctrl, float external_force,float x0,float xd0)
 {
-  T dt = ctrl->dt;
-  ctrl->velocity_cmd +=  ctrl->acc * dt;
-  ctrl->pos_cmd +=  ctrl->velocity_cmd * dt;
+  float dt = ctrl->dt;
   ctrl->acc = (external_force
-               - ctrl->D_a_ * ctrl->velocity_cmd
-               - ctrl->K_a_ * (ctrl->pos_cmd - ctrl->lastpos)) / ctrl->M_a_;
-  ctrl->lastpos = ctrl->pos_cmd;
+               - ctrl->D_a_ * (ctrl->velocity_cmd - xd0)
+               - ctrl->K_a_ * (ctrl->pos_cmd - x0)) / ctrl->M_a_;
+  ctrl->delta_velocity +=  ctrl->acc * dt;
+  ctrl->delta_pos +=  ctrl->delta_velocity * dt;
+
+  ctrl->pos_cmd = ctrl->pos_cmd + ctrl->delta_pos;
 //		printf("%f,%f,%f\r\n",ctrl->pos_cmd,ctrl->velocity_cmd,ctrl->acc);
 }
 
 void update_AdmittanceController(AdmittanceController* ctrl, joint_control* joint)
 {
   ctrl->pos_cmd = joint->filt_res[0];
-  ctrl->lastpos = ctrl->pos_cmd;
   ctrl->velocity_cmd = joint->filt_res[1];
   ctrl->real_twist = joint->filt_res[2];
 }
 
-void Admittance_Run(AdmittanceController* ctrl, joint_control* joint,T external_force)
+void Admittance_Run(AdmittanceController* ctrl, joint_control* joint,float external_force)
 {
-  if(ctrl->AC_enable == 1 && ctrl->time_end > 0)
-    {
-      if(ctrl->start_flag == 1)
-        {
-          update_AdmittanceController(ctrl,joint);
-          ctrl->start_flag = 0;
-        }
-      Admittance_Compute(ctrl,external_force);
-      ctrl->time_end -= ctrl->dt;
-      Admittance2joint(ctrl,joint);
 
-    }
-  else
-    {
-      ctrl->start_flag = 1;
-    }
+		update_AdmittanceController(ctrl,joint);
+		Admittance_Compute(ctrl,external_force,0.01,0);
+//      Admittance2joint(ctrl,joint);
 }
 
-T ExternalForce_Set(AdmittanceController* ctrl, T pos)
-{
-  T externalForce = 0.0; // N
-  T lastpos = ctrl->lastpos;
-
-  if(fabs(pos - lastpos) > F_DEADBOUND )
-    {
-      if(pos > lastpos)
-        {
-          externalForce = 15.0;
-        }
-      else
-        {
-          externalForce = -15.0;
-        }
-    }
-  else
-    {
-      externalForce = 0.0;
-    }
-
-  ctrl->lastpos = pos;
-  return externalForce;
-}
 
 void Admittance2joint(AdmittanceController* ctrl, joint_control* joint)
 {
-  T pos_des = ctrl->pos_cmd;
-  joint_set(joint,pos_des,0,0,50,30);
+  joint_set(joint,ctrl->pos_cmd,0,0,10,5);
 }
 
 

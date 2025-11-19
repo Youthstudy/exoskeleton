@@ -6,6 +6,8 @@
         "control.h": "c",
         "array": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "main.h": "c",
+        "admittance_control.h": "c"
     }
 }

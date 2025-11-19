@@ -15,7 +15,6 @@ void ImpedanceCtrl_Init(ImpandanceController* ctrl,
 	ctrl->frequence = frequence;
 	ctrl->pos_init = pos_init;
 	ctrl->enable = 1;
-	ctrl->time_end = 1000.0;
 }
 
 void update_ImpandanceController(ImpandanceController* ctrl, joint_control* joint){
@@ -49,7 +48,6 @@ void ImpedanceCtrl_Run(ImpandanceController* ctrl, joint_control* joint,T pos_de
 	ctrl->time_end += 1/1000.0;
 	update_ImpandanceController(ctrl,joint);
 	ImpedanceCtrl_Compute(ctrl,joint,pos_desire);
-	Impedance2joint(ctrl,joint);
 	printf("%f,%f\r\n",ctrl->forces_cmd,pos_desire);
 }
 
