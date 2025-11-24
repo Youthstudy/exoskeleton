@@ -162,11 +162,7 @@ void SendPCTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		uint8_t buffer[128] = {0};
-		uint8_t n = 0;
-		n = joint_pack(&joint[0], buffer, n);
-    n = joint_pack(&joint[1], buffer, n);
-		sendData(buffer,n);
+		
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
   /* USER CODE END SendPCTask */
@@ -188,9 +184,7 @@ void ACTask02(void const * argument)
   for(;;)
   {
 		for(int i = 0; i < MOTOR; i++){
-			int flag = i == 0? 1:-1;
-			update_AdmittanceController(&ACtrl[i],&joint[i]);
-			Admittance_Compute(&ACtrl[i],joint[i].filt_res[2] * flag,0.01,0);
+			
 		}
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
@@ -203,6 +197,50 @@ void ACTask02(void const * argument)
 * @param argument: Not used
 * @retval None
 */
+int control_flag = 0;
+int n[2] = {7, 7}; // 0~ 10
+float force_leg_pos(double x)
+{
+    // Fourier3 coefficients
+    const double a0 = -0.7682;
+    const double a1 =  0.572;
+    const double b1 = -0.1764;
+    const double a2 =  0.1366;
+    const double b2 = -0.0447;
+    const double a3 = -0.02925;
+    const double b3 =  0.2065;
+    const double w  =  2.317;
+
+    double wx = w * x;
+
+    float y = a0
+        + a1 * cos(wx)      + b1 * sin(wx)
+        + a2 * cos(2 * wx)  + b2 * sin(2 * wx)
+        + a3 * cos(3 * wx)  + b3 * sin(3 * wx);
+
+    return y;
+}
+
+float other_leg_pos(double x)
+{
+    const float a0 = -0.2921f;
+    const float a1 = -0.03752f;
+    const float b1 =  0.1982f;
+    const float a2 =  0.04183f;
+    const float b2 =  0.07817f;
+    const float a3 =  0.08828f;
+    const float b3 =  0.02173f;
+    const float w  =  2.453f;
+
+    float wx = w * x;
+
+    float y = a0
+        + a1 * cosf(wx)       + b1 * sinf(wx)
+        + a2 * cosf(2 * wx)   + b2 * sinf(2 * wx)
+        + a3 * cosf(3 * wx)   + b3 * sinf(3 * wx);
+
+    return y;
+}
 /* USER CODE END Header_scheduleTask */
 void scheduleTask(void const * argument)
 {
@@ -210,16 +248,24 @@ void scheduleTask(void const * argument)
 	const TickType_t xFrequency = pdMS_TO_TICKS(1); // 1000ms
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	int cnt = 0;
+  double t = 0.0;
   /* Infinite loop */
   for(;;)
   {
-		int n[2] = {7, 7}; // 0~ 10
-
+		if(control_flag == 0){
+			t = 0;
+			continue;
+		}
     for(int i = 0; i < MOTOR; i++){
+      int flag = i == 0? 1:-1;
+      float pos_des = i == 0? force_leg_pos(t):other_leg_pos(t);
 				if(cnt >= n[i] && cnt <= MAXT){ 
+          
+			  update_AdmittanceController(&ACtrl[i],&joint[i]);
+			  Admittance_Compute(&ACtrl[i],joint[i].filt_res[2] * flag,flag * pos_des,0);
 					Admittance2joint(&ACtrl[i],&joint[i]);
 				}else if(cnt < n[i]){
-					joint_set(&joint[i],0,0,0,10,5);
+					joint_set(&joint[i],flag * pos_des,0,0,10,5);
 				}
     }
 
@@ -229,7 +275,13 @@ void scheduleTask(void const * argument)
       }
     CAN_Send_Msg(&hcan1,joint[0].senddata,1);
     CAN_Send_Msg(&hcan2,joint[1].senddata,1);
+    uint8_t buffer[128] = {0};
+		uint8_t tmp = 0;
+		tmp = joint_pack(&joint[0], buffer, tmp);
+    tmp = joint_pack(&joint[1], buffer, tmp);
+		sendData(buffer,tmp);
 		cnt = cnt > MAXT ? 0 : cnt + 1;
+    t += 0.001;
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
   /* USER CODE END scheduleTask */

@@ -45,4 +45,3 @@ exoskeleton\cansend.o: ./bsp/control.h
 exoskeleton\cansend.o: ./bsp/pid.h
 exoskeleton\cansend.o: ./bsp/filt.h
 exoskeleton\cansend.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\cansend.o: ../Core/Inc/can.h

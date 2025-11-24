@@ -46,5 +46,4 @@ exoskeleton\calculate.o: ./bsp/control.h
 exoskeleton\calculate.o: ./bsp/pid.h
 exoskeleton\calculate.o: ./bsp/filt.h
 exoskeleton\calculate.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-exoskeleton\calculate.o: ../Core/Inc/can.h
 exoskeleton\calculate.o: ../Core/Inc/usart.h
