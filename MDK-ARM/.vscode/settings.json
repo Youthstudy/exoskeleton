@@ -1,5 +1,5 @@
 {
-    "files.encoding": "gbk",
+    "files.encoding": "utf8",
     "files.associations": {
         "*.cpp": "cpp",
         "cansend.h": "c",

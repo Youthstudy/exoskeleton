@@ -41,6 +41,8 @@ exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
+exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\tcpsend.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 exoskeleton\tcpsend.o: ./bsp/RouteQ.h
 exoskeleton\tcpsend.o: ./bsp/calculate.h

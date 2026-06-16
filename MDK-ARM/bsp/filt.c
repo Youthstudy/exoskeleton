@@ -3,6 +3,24 @@
 #include <string.h>
 // -- »¬¶¯Æ½¾ùÂË²¨ --// 
 
+LPF joint_lpf[2];
+
+void LPF_Init(LPF* lpf, float cutoff, float dt)
+{
+    lpf->cutoff = cutoff;
+    lpf->dt = dt;
+    float RC = 1.0f / (2.0f * 3.1415926f * cutoff);
+    lpf->alpha = dt / (RC + dt);
+    lpf->y = 0.0f;
+}
+
+float LPF_Update(LPF* lpf, float x)
+{
+    lpf->y = lpf->y + lpf->alpha * (x - lpf->y);
+    return lpf->y;
+}
+
+
 float movingAverage(FILT_HandleTypedef* Flit,float newSample) {
 
     Flit->sum -= Flit->buffer[Flit->index];
@@ -21,7 +39,7 @@ void FILT_init(FILT_HandleTypedef* Flit){
 }
 
 
-void Kalman_Init(KalmanFilter_HandleTypedef* kf, T LastP,T Q,T R)      
+void Kalman_Init(KalmanFilter_HandleTypedef* kf, float LastP,float Q,float R)      
 {
 	kf->LastP = LastP;
 	kf->Now_P = 0;
@@ -32,9 +50,7 @@ void Kalman_Init(KalmanFilter_HandleTypedef* kf, T LastP,T Q,T R)
 	
 }
 
-
-
-T Kalman_Predict(KalmanFilter_HandleTypedef* kfp,T input){
+float Kalman_Predict(KalmanFilter_HandleTypedef* kfp,float input){
 	kfp->Now_P = kfp->LastP + kfp->Q;
 	kfp->Kg = kfp->Now_P / (kfp->Now_P + kfp->R);
 	kfp->out = kfp->out + kfp->Kg * (input -kfp->out);

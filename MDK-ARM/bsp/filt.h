@@ -6,12 +6,10 @@
 
 #define WINDOW_SIZE 20
 
-typedef float T;
-
 typedef struct{
-	T buffer[WINDOW_SIZE];
+	float buffer[WINDOW_SIZE];
 	int index;
-	T sum;
+	float sum;
 }FILT_HandleTypedef;
 
 typedef struct{
@@ -21,22 +19,33 @@ typedef struct{
 	// Q: 过程噪声方差
 	// R: 测量噪声方差
 	// Kg: 卡尔曼增益
-	T LastP;
-	T Now_P;
-	T out;
-	T Kg;
-	T Q;
-	T R;
+	float LastP;
+	float Now_P;
+	float out;
+	float Kg;
+	float Q;
+	float R;
 
 }KalmanFilter_HandleTypedef;
+
+typedef struct {
+    float cutoff; 
+    float dt;  
+    float alpha; 
+    float y;   
+} LPF;
+
+
+extern LPF joint_lpf[2];
 
 float movingAverage(FILT_HandleTypedef* Flit,float newSample);
 void FILT_init(FILT_HandleTypedef* Flit);
 
-void Kalman_Init(KalmanFilter_HandleTypedef* kf, T LastP,T Q,T R);
-T Kalman_Predict(KalmanFilter_HandleTypedef* kfp,T input);
+void Kalman_Init(KalmanFilter_HandleTypedef* kf, float LastP,float Q,float R);
+float Kalman_Predict(KalmanFilter_HandleTypedef* kfp,float input);
 
-
+void LPF_Init(LPF* lpf, float cutoff, float dt);
+float LPF_Update(LPF* lpf, float x);
 
 #endif
 

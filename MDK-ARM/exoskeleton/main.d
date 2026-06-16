@@ -32,6 +32,8 @@ exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
+exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 exoskeleton\main.o: ./bsp/RouteQ.h
 exoskeleton\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
@@ -62,8 +64,12 @@ exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 exoskeleton\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 exoskeleton\main.o: ../Core/Inc/crc.h
+exoskeleton\main.o: ../Core/Inc/dma.h
 exoskeleton\main.o: ../Core/Inc/rtc.h
+exoskeleton\main.o: ../Core/Inc/tim.h
 exoskeleton\main.o: ../Core/Inc/usart.h
 exoskeleton\main.o: ../Core/Inc/gpio.h
 exoskeleton\main.o: ./bsp/admittance_control.h
 exoskeleton\main.o: ./bsp/impandance_control.h
+exoskeleton\main.o: ./bsp/serial_parser.h
+exoskeleton\main.o: ./bsp/Switcher.h

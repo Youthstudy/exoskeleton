@@ -41,6 +41,8 @@ exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h
+exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 exoskeleton\freertos.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 exoskeleton\freertos.o: ./bsp/RouteQ.h
 exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
@@ -65,3 +67,9 @@ exoskeleton\freertos.o: ../Core/Inc/usart.h
 exoskeleton\freertos.o: ./bsp/my_task.h
 exoskeleton\freertos.o: ./bsp/TCPsend.h
 exoskeleton\freertos.o: ./bsp/admittance_control.h
+exoskeleton\freertos.o: ./bsp/impandance_control.h
+exoskeleton\freertos.o: ./bsp/Switcher.h
+exoskeleton\freertos.o: ./bsp/serial_parser.h
+exoskeleton\freertos.o: ../Core/Inc/dma.h
+exoskeleton\freertos.o: ./bsp/compliance_ctrl.h
+exoskeleton\freertos.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdbool.h

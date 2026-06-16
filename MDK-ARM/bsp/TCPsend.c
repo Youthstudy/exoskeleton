@@ -46,7 +46,9 @@ int joint_pack(const joint_control *joint, uint8_t *buffer, int offset)
     offset += sizeof(float);
     memcpy(buffer + offset, &joint->kd, sizeof(float));
     offset += sizeof(float);
-    memcpy(buffer + offset, &joint->t_ff, sizeof(float));
+    memcpy(buffer + offset, &joint->pos_cmd, sizeof(float));
+    offset += sizeof(float);
+		memcpy(buffer + offset, &joint->moveflag, sizeof(float));
     offset += sizeof(float);
 	return offset;
     

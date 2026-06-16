@@ -17,27 +17,17 @@ typedef struct {
 	int frequency; // hz
 	float pos_init; // 初始位置 弧度
 	float dt;
-	float lastpos;
-	float lastV;
-	float acc;
-	
 	int start_flag;
-	
-	// -- CALLBACK -- //
-	float current_pos; // 弧度
-	float target_pos;	// 弧度
-	float current_velocity; //当前角速度 
-	float real_twist;
-	float Force;
-	float dpos;
+	float delta_velocity;
+	float delta_pos;	
+	float kp,kd;
 	
 	// -- OUTPUT COMMANDS --- //
 	// final arm desired velocity
 	float velocity_cmd;
-	float motor_desired_twist_;
 	float pos_cmd;
-	float delta_velocity;
-	float delta_pos;
+
+	float f_output;
 	
 	// -- FILT STRUCT --//
 	FILT_HandleTypedef filt;
@@ -49,16 +39,15 @@ typedef struct {
 
 extern AdmittanceController ACtrl[2];
 
-void Admittance_init(AdmittanceController* ac,joint_control* joint,float M_a,float D_a,float K_a_);
+void Admittance_init(AdmittanceController* ac, joint_control* joint,float M_a,float D_a,float K_a_);
 void Admittance_set(AdmittanceController* ctrl, float M_a, float D_a,float K_a_);
+void Admittance_PDset(AdmittanceController* ctrl,float p, float d);
 
-void Admittance_Compute(AdmittanceController* ctrl, float external_force,float x0,float xd0);
-void update_AdmittanceController(AdmittanceController* ctrl, joint_control* joint);
-void Admittance_Run(AdmittanceController* ctrl, joint_control* joint,float external_force);
+void Admittance_Compute(AdmittanceController* ctrl, float external_force,float x0, float x0_dot);
 
 void Admittance2joint(AdmittanceController* ctrl, joint_control* joint);
 void Admittance_pc_set(AdmittanceController* ctrl,motor_parameter_typedef *mp, joint_control* joint);
 
-float ExternalForce_Set(AdmittanceController* ctrl, float pos);
+
 #endif
 

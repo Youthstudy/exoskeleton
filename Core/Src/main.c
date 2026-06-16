@@ -21,7 +21,9 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "crc.h"
+#include "dma.h"
 #include "rtc.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -29,7 +31,8 @@
 /* USER CODE BEGIN Includes */
 #include "admittance_control.h"
 #include "impandance_control.h"
-
+#include "serial_parser.h"
+#include "Switcher.h"
 //#include "usbd_cdc_if.c"
 
 /* USER CODE END Includes */
@@ -96,31 +99,35 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_CAN1_Init();
   MX_USART6_UART_Init();
   MX_CRC_Init();
   MX_CAN2_Init();
   MX_RTC_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	
-	joint_init(&joint[0]);
-	joint_init(&joint[1]);
-	
-	// 初始化
-	int j = 0;
-	
+  for(int i = 0; i < 2; i++)
+    joint_init(&joint[i],i,20,10);
 
-
-  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); //使能can接收中断
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING); 
   HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
-	
 	
   EnterMotorMode(1);
 
-  // 临时电机参数设置
-  HAL_UART_Receive_IT(&huart6, motor_parameter.RecieveBuffer, 1);
+ 
+  HAL_UART_Receive_DMA(&huart6 , uart_dma_rx_buf ,256);
+
+	__HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
+  
+
 	for(int i = 0; i < 2; i++){
-		Admittance_init(&ACtrl[i], &joint[i], 10.0,10, 0.1);
+		float flag = i == 0? 1 : -1;
+		Admittance_init(&ACtrl[i], &joint[i], 2.0, 5, 15);
+		ImpedanceCtrl_Init(&Ictrl[i], 2.0, 5, 15, flag, 1000);
+		LPF_Init(&joint_lpf[i],10,0.001);
+    Virtual_init(&virtual_state[i], 20.0, 15.0, 100.0);
 	}
 	
 
@@ -140,18 +147,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-			if(j == 0){
-				for(int i = 0; i < MOTOR; i++){
-					if(joint[i].p_init != 0){
-						
-						ImpedanceCtrl_Init(&Ictrl[i], 1, 5.4690, 21.4961, joint[i].p_init, 1000);
-						j ++;
-					}
-				}
-			}
-			
-			pc_debug();
-			HAL_Delay(10);
     }
   /* USER CODE END 3 */
 }
@@ -204,13 +199,28 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void pc_debug(void){
-	Admittance_pc_set(&ACtrl[0],&motor_parameter,&joint[0]);
-// Impedance_pc_set(&Ictrl[0],&motor_parameter);
-	
-}
-
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

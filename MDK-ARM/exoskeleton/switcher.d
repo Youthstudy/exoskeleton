@@ -1,0 +1,12 @@
+exoskeleton\switcher.o: bsp\Switcher.c
+exoskeleton\switcher.o: bsp\Switcher.h
+exoskeleton\switcher.o: bsp\control.h
+exoskeleton\switcher.o: bsp\pid.h
+exoskeleton\switcher.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+exoskeleton\switcher.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
+exoskeleton\switcher.o: bsp\filt.h
+exoskeleton\switcher.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+exoskeleton\switcher.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+exoskeleton\switcher.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h
+exoskeleton\switcher.o: bsp\admittance_control.h
+exoskeleton\switcher.o: bsp\impandance_control.h
